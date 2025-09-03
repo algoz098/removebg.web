@@ -3,7 +3,6 @@ import { removeBackground } from '@imgly/background-removal';
 import { downloadBlob } from './utils.js';
 import { modelPreloader } from './model-preloader.js';
 import { cacheManager } from './cache-manager.js';
-import { toast } from './toast.js';
 import { globalState } from './global-state.js';
 
 export class BackgroundProcessor {
@@ -21,10 +20,10 @@ export class BackgroundProcessor {
       // Verificar se modelo foi pré-carregado no splash
       if (window.modelReady && window.lastModelInit) {
         const timeSinceInit = Date.now() - window.lastModelInit;
-        toast.success(`⚡ Modelo pré-carregado! Processamento instantâneo (${Math.round(timeSinceInit/1000)}s atrás).`);
+        console.log(`⚡ Modelo pré-carregado! Processamento instantâneo (${Math.round(timeSinceInit/1000)}s atrás).`);
         this.uiManager.updateProgress(30, 'Modelo já inicializado, processando...');
       } else {
-        toast.warning('⚠️ Modelo não foi pré-carregado, inicializando agora...');
+        console.log('⚠️ Modelo não foi pré-carregado, inicializando agora...');
         this.uiManager.updateProgress(10, 'Inicializando modelo...');
       }
       
@@ -54,16 +53,16 @@ export class BackgroundProcessor {
       // Relatório de performance simplificado
       if (window.modelReady) {
         if (processingTime < 1000) {
-          toast.success(`🚀 Processamento instantâneo! (${processingTime}ms) - Modelo pré-carregado funcionou!`);
+          console.log(`🚀 Processamento instantâneo! (${processingTime}ms) - Modelo pré-carregado funcionou!`);
         } else {
-          toast.info(`⚡ Processamento rápido! (${Math.round(processingTime/1000)}s) - Usando cache`);
+          console.log(`⚡ Processamento rápido! (${Math.round(processingTime/1000)}s) - Usando cache`);
         }
       } else {
-        toast.warning(`⚠️ Modelo inicializado durante processamento. Tempo: ${Math.round(processingTime/1000)}s`);
+        console.log(`⚠️ Modelo inicializado durante processamento. Tempo: ${Math.round(processingTime/1000)}s`);
       }
       
-      // Toast de sucesso
-      toast.success('🎨 Fundo removido com sucesso!');
+      // Log de sucesso
+      console.log('🎨 Fundo removido com sucesso!');
       
       // Armazenar resultado no estado global
       globalState.setProcessedImageBlob(imageBlob);
@@ -75,7 +74,6 @@ export class BackgroundProcessor {
       
     } catch (error) {
       console.error('Erro no processamento:', error);
-      toast.error(`❌ Erro ao processar: ${error.message}`);
       this.uiManager.updateStatus(`❌ Erro ao processar imagem: ${error.message}`, 'error');
       throw error;
     }
@@ -153,8 +151,8 @@ export class BackgroundProcessor {
     const filename = originalName.replace(/\.[^/.]+$/, '') + '_no_bg.png';
     downloadBlob(blob, filename);
     
-    // Toast de download
-    toast.success('💾 Download iniciado!');
+    // Log de download
+    console.log('💾 Download iniciado!');
     this.uiManager.updateStatus('✅ Download iniciado!');
   }
 }

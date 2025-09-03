@@ -1,5 +1,5 @@
-// Sistema de cache avançado para recursos de IA
-import { toast } from './toast.js';
+// Sistema de cache inteligente
+import { formatFileSize } from './utils.js';
 
 export class CacheManager {
   constructor() {

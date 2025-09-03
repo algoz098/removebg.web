@@ -1,6 +1,5 @@
 // Gerenciamento da interface do usuário
-import { toast } from './toast.js';
-import { modelPreloader } from './model-preloader.js';
+import { formatFileSize } from './utils.js';
 
 export class UIManager {
   constructor() {

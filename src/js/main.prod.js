@@ -4,7 +4,6 @@ import { FileUploadManager } from './file-upload.js';
 import { BackgroundProcessor } from './background-processor.js';
 import { modelPreloader } from './model-preloader.js';
 import { cacheManager } from './cache-manager.js';
-import { toast } from './toast.js';
 import { globalState } from './global-state.js';
 
 class RemoveBGApp {
@@ -59,10 +58,8 @@ class RemoveBGApp {
     
     this.isReady = true;
     
-    // Toast de boas-vindas
-    setTimeout(() => {
-      toast.success('🎉 RemoveBG pronto! Modelo de IA carregado e funcional.', 4000);
-    }, 500);
+    // Log de inicialização
+    console.log('✅ RemoveBG App inicializado com sucesso!');
   }
 
   async waitForEssentialElements() {
@@ -113,7 +110,7 @@ class RemoveBGApp {
         }
 
         if (!modelPreloader.isReady() && !modelPreloader.isPreloading) {
-          toast.info('🚀 Iniciando carregamento do modelo...');
+          console.log('🚀 Iniciando carregamento do modelo...');
           modelPreloader.startPreloading();
         }
 
@@ -269,7 +266,7 @@ class RemoveBGApp {
       document.body.removeChild(link);
       URL.revokeObjectURL(link.href);
     } else {
-      toast.show('❌ Imagem processada não está disponível', 'error');
+      console.error('Imagem processada não está disponível');
     }
   }
 }

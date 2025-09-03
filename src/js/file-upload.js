@@ -1,6 +1,5 @@
 // Gerenciamento de upload de arquivos
 import { validateImageFile, formatFileSize, createImageFromFile } from './utils.js';
-import { toast } from './toast.js';
 
 export class FileUploadManager {
   constructor(uiManager) {
@@ -190,8 +189,8 @@ export class FileUploadManager {
     try {
       console.log('🚀 INÍCIO processFile - arquivo:', file.name, file.size);
       
-      const loadingToast = toast.loading('📤 Carregando imagem...');
-      console.log('🍞 Toast de loading criado');
+      console.log('📤 Carregando imagem...');
+      console.log('🍞 Loading iniciado');
       
       console.log('🔍 Validando arquivo...');
       validateImageFile(file);
@@ -211,10 +210,7 @@ export class FileUploadManager {
       await this.showPreview(file);
       console.log('✅ showPreview concluído');
       
-      toast.remove(loadingToast);
-      console.log('🗑️ Toast de loading removido');
-      
-      toast.success('📸 Imagem carregada com sucesso!');
+      console.log(' Imagem carregada com sucesso!');
       this.uiManager.updateStatus('✅ Imagem carregada com sucesso!');
       
       console.log('🎉 SUCESSO - processFile concluído');
@@ -222,7 +218,7 @@ export class FileUploadManager {
     } catch (error) {
       console.error('💥 ERRO em processFile:', error);
       console.error('📊 Stack trace:', error.stack);
-      toast.error(`❌ ${error.message}`);
+      console.error(`❌ ${error.message}`);
       this.uiManager.updateStatus(`❌ ${error.message}`, 'error');
     }
   }
