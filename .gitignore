@@ -117,6 +117,15 @@ test-*.js
 test-*.html
 *.test.temp
 
+# Playwright Test Results
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Test Screenshots
+screenshots/
+test-screenshots/
+
 # Temporary HTML files
 *.html.temp
 
