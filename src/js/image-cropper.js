@@ -26,6 +26,35 @@ export class ImageCropper {
   }
 
   /**
+   * Carrega uma imagem a partir de um File e inicializa o cropper
+   */
+  async loadImage(file) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const container = document.getElementById('crop-preview');
+        if (!container) {
+          reject(new Error('Container crop-preview não encontrado'));
+          return;
+        }
+        
+        try {
+          this.init(img, container);
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      };
+      
+      img.onerror = () => {
+        reject(new Error('Erro ao carregar imagem'));
+      };
+      
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  /**
    * Inicializa o cropper com uma imagem
    */
   init(imageElement, containerElement) {
@@ -61,6 +90,7 @@ export class ImageCropper {
     // Desenhar inicial
     this.draw();
     
+    console.log('✂️ ImageCropper inicializado', {
       canvasSize: `${this.canvas.width}x${this.canvas.height}`,
       imageSize: `${this.imageSize.width}x${this.imageSize.height}`,
       scale: this.scale
@@ -111,6 +141,7 @@ export class ImageCropper {
       height: cropHeight
     };
     
+    console.log('🔄 Área de corte resetada:', {
       cropArea: this.cropArea,
       imageSize: this.imageSize,
       imageOffset: this.imageOffset
@@ -128,6 +159,7 @@ export class ImageCropper {
       height: this.imageSize.height
     };
     
+    console.log('📐 Área de corte definida para imagem completa:', this.cropArea);
   }
 
   /**
@@ -483,6 +515,7 @@ export class ImageCropper {
    */
   getCroppedFile(filename = 'cropped-image.png') {
     return new Promise((resolve) => {
+      console.log('🔍 getCroppedFile - Dados do crop:', {
         cropArea: this.cropArea,
         imageOffset: this.imageOffset,
         scale: this.scale,
@@ -499,6 +532,7 @@ export class ImageCropper {
       const sourceWidth = this.cropArea.width / this.scale;
       const sourceHeight = this.cropArea.height / this.scale;
       
+      console.log('📐 Coordenadas do corte:', {
         sourceX,
         sourceY,
         sourceWidth,
@@ -512,6 +546,7 @@ export class ImageCropper {
       tempCanvas.width = sourceWidth;
       tempCanvas.height = sourceHeight;
       
+      console.log('🖼️ Canvas temporário criado:', {
         width: tempCanvas.width,
         height: tempCanvas.height
       });
@@ -531,12 +566,14 @@ export class ImageCropper {
       
       // Converter para blob e criar File
       tempCanvas.toBlob((blob) => {
+        console.log('💾 Blob criado:', {
           size: blob.size,
           type: blob.type
         });
         
         const file = new File([blob], filename, { type: 'image/png' });
         
+        console.log('📄 File criado:', {
           name: file.name,
           size: file.size,
           type: file.type,

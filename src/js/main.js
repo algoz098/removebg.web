@@ -2,7 +2,7 @@
 import { UIManager } from './ui-manager.js';
 import { FileUploadManager } from './file-upload.js';
 import { BackgroundProcessor } from './background-processor.js';
-// import { ImageCropper } from './image-cropper.js';
+import { ImageCropper } from './image-cropper.js';
 import { modelPreloader } from './model-preloader.js';
 import { cacheManager } from './cache-manager.js';
 import { globalState } from './global-state.js';
@@ -52,7 +52,7 @@ class RemoveBGApp {
     this.uiManager = new UIManager();
     this.fileUploadManager = new FileUploadManager(this.uiManager);
     this.backgroundProcessor = new BackgroundProcessor(this.uiManager);
-    // this.imageCropper = new ImageCropper();
+    this.imageCropper = new ImageCropper();
     
     this.setupNavigationListeners();
     this.setupCropListeners();
@@ -152,15 +152,15 @@ class RemoveBGApp {
 
     if (resetCropBtn) {
       resetCropBtn.addEventListener('click', () => {
+        this.imageCropper.resetCropArea();
         this.uiManager.updateStatus('🔄 Área de corte resetada', 'info');
-        // this.imageCropper.resetCropArea();
       });
     }
 
     if (fullCropBtn) {
       fullCropBtn.addEventListener('click', () => {
+        this.imageCropper.setFullImageCrop();
         this.uiManager.updateStatus('📐 Imagem completa selecionada', 'info');
-        // this.imageCropper.setFullImageCrop();
       });
     }
 
@@ -179,10 +179,16 @@ class RemoveBGApp {
         return;
       }
 
-      // Por enquanto, mostrar página de crop com mensagem temporária
+      // Mostrar página de crop
       this.uiManager.showPage('crop');
       
-      this.uiManager.updateStatus('✂️ Funcionalidade de corte em desenvolvimento. Clique "Voltar" para continuar.', 'info');
+      // Esperar um pouco para a página aparecer
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Inicializar cropper com a imagem
+      await this.imageCropper.loadImage(file);
+      
+      this.uiManager.updateStatus('✂️ Ajuste a área de corte e clique em "Aplicar Corte"', 'info');
       
     } catch (error) {
       console.error('Erro ao inicializar crop:', error);
@@ -192,10 +198,21 @@ class RemoveBGApp {
 
   async handleApplyCrop() {
     try {
-      // Por enquanto, apenas voltar para preview
-      this.uiManager.showPage(2);
-      this.uiManager.updateStatus('ℹ️ Funcionalidade de corte em desenvolvimento. Processando imagem original.', 'info');
-      
+      const croppedFile = await this.imageCropper.getCroppedFile();
+      if (croppedFile) {
+        // Atualizar o arquivo selecionado com a versão cortada
+        this.fileUploadManager.setSelectedFile(croppedFile);
+        
+        // Mostrar preview da imagem cortada
+        this.uiManager.showImagePreview(croppedFile);
+        
+        // Voltar para a página de preview
+        this.uiManager.showPage(2);
+        
+        this.uiManager.updateStatus('✅ Imagem cortada com sucesso!', 'success');
+      } else {
+        this.uiManager.updateStatus('❌ Erro ao aplicar corte', 'error');
+      }
     } catch (error) {
       console.error('Erro ao aplicar crop:', error);
       this.uiManager.updateStatus('❌ Erro ao aplicar corte', 'error');
