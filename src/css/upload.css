@@ -19,14 +19,7 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-.upload-area input[type="file"] {
-  position: absolute;
-  top: -9999px;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
+/* Input file está escondido via display: none no HTML */
 
 .upload-text {
   color: white;

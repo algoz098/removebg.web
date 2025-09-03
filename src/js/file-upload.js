@@ -18,66 +18,160 @@ export class FileUploadManager {
     
     console.log('🔧 Configurando event listeners...');
     
+    // Aguardar um pouco para garantir que o DOM está pronto
+    setTimeout(() => {
+      this.initializeListeners();
+    }, 100);
+  }
+
+  initializeListeners() {
     const fileInput = document.getElementById('file-input');
     const uploadArea = document.getElementById('upload-area');
+    const fallbackBtn = document.getElementById('fallback-upload-btn');
     
     console.log('🎯 Elementos encontrados:', {
       fileInput: !!fileInput,
-      uploadArea: !!uploadArea
+      uploadArea: !!uploadArea,
+      fallbackBtn: !!fallbackBtn,
+      fileInputType: fileInput?.type,
+      uploadAreaTagName: uploadArea?.tagName
     });
     
-    // Upload de arquivo
-    if (fileInput) {
-      console.log('✅ Configurando listener para file-input');
-      fileInput.addEventListener('change', (e) => {
-        console.log('📁 Event change disparado!', e.target.files);
-        this.handleFileUpload(e);
-      });
-    } else {
-      console.error('❌ Elemento #file-input não encontrado!');
+    if (!fileInput || !uploadArea) {
+      console.error('❌ Elementos essenciais não encontrados! Tentando novamente em 500ms...');
+      setTimeout(() => this.initializeListeners(), 500);
+      return;
     }
     
-    // Drag and drop
-    if (uploadArea) {
-      console.log('✅ Configurando listeners para upload-area');
-      
-      uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('dragover');
-      });
+    // Upload de arquivo
+    console.log('✅ Configurando listener para file-input');
+    fileInput.addEventListener('change', (e) => {
+      console.log('📁 Event change disparado!', e.target.files);
+      this.handleFileUpload(e);
+    });
+    
+    // Configurar listeners de drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadArea.classList.add('dragover');
+    });
 
-      uploadArea.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-      });
+    uploadArea.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadArea.classList.remove('dragover');
+    });
 
-      uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-        console.log('📂 Drop event!', e.dataTransfer.files);
-        
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-          this.processFile(files[0]);
-        }
-      });
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      uploadArea.classList.remove('dragover');
+      console.log('📂 Drop event!', e.dataTransfer.files);
       
-      // Listener para clique na área
-      uploadArea.addEventListener('click', (e) => {
-        console.log('🖱️ Upload area clicada');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        this.processFile(files[0]);
+      }
+    });
+    
+    // Listener para clique na área - mais robusto
+    uploadArea.addEventListener('click', (e) => {
+      console.log('🖱️ Upload area clicada', e.target);
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Verificar se o clique não foi no input file
+      if (e.target !== fileInput) {
+        console.log('🔄 Disparando click no fileInput...');
+        this.triggerFileInput();
+      }
+    });
+    
+    // Listener para botão de fallback
+    if (fallbackBtn) {
+      fallbackBtn.addEventListener('click', (e) => {
+        console.log('🔧 Botão de fallback clicado');
         e.preventDefault();
-        
-        if (fileInput) {
-          console.log('🔄 Disparando click no fileInput...');
-          fileInput.click();
-        }
+        e.stopPropagation();
+        this.triggerFileInput();
       });
-    } else {
-      console.error('❌ Elemento #upload-area não encontrado!');
     }
+    
+    // Fallback listener adicional para debugging
+    document.addEventListener('click', (e) => {
+      if (e.target && e.target.closest('.upload-area')) {
+        console.log('🎯 Clique detectado na upload-area via document listener');
+      }
+    });
     
     this.listenersSetup = true;
     console.log('✅ Event listeners configurados');
+    
+    // Teste adicional para debugging no Chrome
+    this.testFileInputFunctionality();
+  }
+
+  triggerFileInput() {
+    const fileInput = document.getElementById('file-input');
+    if (fileInput) {
+      try {
+        console.log('🚀 Tentando disparar clique no file input...');
+        fileInput.click();
+        console.log('✅ Clique disparado com sucesso');
+      } catch (error) {
+        console.error('❌ Erro ao clicar no fileInput:', error);
+        // Fallback: tentar criar novo input temporário
+        this.createTemporaryFileInput();
+      }
+    } else {
+      console.error('❌ File input não encontrado');
+    }
+  }
+
+  createTemporaryFileInput() {
+    console.log('🆘 Criando input temporário como fallback...');
+    const tempInput = document.createElement('input');
+    tempInput.type = 'file';
+    tempInput.accept = 'image/*';
+    tempInput.style.display = 'none';
+    
+    tempInput.addEventListener('change', (e) => {
+      console.log('📁 Arquivo selecionado via input temporário');
+      this.handleFileUpload(e);
+      document.body.removeChild(tempInput);
+    });
+    
+    document.body.appendChild(tempInput);
+    tempInput.click();
+  }
+
+  testFileInputFunctionality() {
+    setTimeout(() => {
+      const fileInput = document.getElementById('file-input');
+      const uploadArea = document.getElementById('upload-area');
+      
+      console.log('🧪 Teste de funcionalidade:', {
+        fileInputExists: !!fileInput,
+        fileInputClickable: fileInput ? typeof fileInput.click === 'function' : false,
+        uploadAreaExists: !!uploadArea,
+        uploadAreaClickable: uploadArea ? typeof uploadArea.click === 'function' : false,
+        fileInputVisible: fileInput ? getComputedStyle(fileInput).display !== 'none' : false,
+        uploadAreaVisible: uploadArea ? getComputedStyle(uploadArea).display !== 'none' : false
+      });
+      
+      if (fileInput) {
+        // Teste de clique programático
+        console.log('🔬 Testando clique programático no file input...');
+        try {
+          fileInput.addEventListener('click', () => {
+            console.log('🎯 File input clique detectado via teste!');
+          }, { once: true });
+        } catch (error) {
+          console.error('❌ Erro no teste de clique:', error);
+        }
+      }
+    }, 1000);
   }
 
   handleFileUpload(event) {

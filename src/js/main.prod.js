@@ -45,13 +45,8 @@ class RemoveBGApp {
     // Aguardar um pouco para garantir que DOM está pronto
     await new Promise(resolve => setTimeout(resolve, 100));
     
-    // Verificar elementos essenciais
-    const fileInput = document.getElementById('file-input');
-    const uploadArea = document.getElementById('upload-area');
-    
-    if (!fileInput || !uploadArea) {
-      await new Promise(resolve => setTimeout(resolve, 500));
-    }
+    // Verificar elementos essenciais com retry
+    await this.waitForEssentialElements();
     
     this.uiManager = new UIManager();
     this.fileUploadManager = new FileUploadManager(this.uiManager);
@@ -68,6 +63,31 @@ class RemoveBGApp {
     setTimeout(() => {
       toast.success('🎉 RemoveBG pronto! Modelo de IA carregado e funcional.', 4000);
     }, 500);
+  }
+
+  async waitForEssentialElements() {
+    const maxRetries = 10;
+    let retries = 0;
+    
+    while (retries < maxRetries) {
+      const fileInput = document.getElementById('file-input');
+      const uploadArea = document.getElementById('upload-area');
+      
+      console.log(`🔍 Tentativa ${retries + 1}: Verificando elementos essenciais...`, {
+        fileInput: !!fileInput,
+        uploadArea: !!uploadArea
+      });
+      
+      if (fileInput && uploadArea) {
+        console.log('✅ Elementos essenciais encontrados!');
+        return;
+      }
+      
+      retries++;
+      await new Promise(resolve => setTimeout(resolve, 200));
+    }
+    
+    console.error('❌ Elementos essenciais não encontrados após', maxRetries, 'tentativas');
   }
 
   setupNavigationListeners() {

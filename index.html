@@ -60,13 +60,22 @@
       
       <!-- Botões de teste DEBUG -->
       
+      <!-- Input file escondido, fora da upload-area -->
+      <input type="file" id="file-input" accept="image/*" style="display: none;" />
+      
       <div class="upload-area" id="upload-area">
-        <input type="file" id="file-input" accept="image/*" />
         <div class="upload-text">
           <span class="upload-icon">📸</span>
           <span>Clique para selecionar uma imagem ou arraste aqui</span>
           <small>Suporta JPG, PNG, WEBP até 10MB</small>
         </div>
+      </div>
+      
+      <!-- Botão de fallback para debugging -->
+      <div style="margin-top: 10px; text-align: center;">
+        <button id="fallback-upload-btn" style="background: #6c5ce7; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-size: 14px;">
+          🔧 Botão Alternativo (Teste)
+        </button>
       </div>
     </div>
     
