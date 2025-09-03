@@ -228,11 +228,16 @@ class RemoveBGApp {
 
   async handleResizeImage() {
     try {
+      console.log('🔄 Iniciando redimensionamento...');
+      
       const processedImageBlob = globalState.getProcessedImageBlob();
       if (!processedImageBlob) {
+        console.error('❌ Imagem processada não encontrada no estado global');
         this.uiManager.updateStatus('❌ Nenhuma imagem processada encontrada', 'error');
         return;
       }
+
+      console.log('✅ Imagem processada encontrada:', processedImageBlob);
 
       // Mostrar página de redimensionamento
       this.uiManager.showPage('resize');
@@ -240,12 +245,18 @@ class RemoveBGApp {
       // Mostrar indicador de carregamento
       this.uiManager.updateStatus('📏 Preparando interface de redimensionamento...', 'loading');
       
+      // Aguardar um frame para garantir que a página foi renderizada
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      
       // Inicializar redimensionador com a imagem processada
+      console.log('🔄 Inicializando ImageResizer...');
       const success = await this.imageResizer.initWithImage(processedImageBlob);
       
       if (success) {
+        console.log('✅ ImageResizer inicializado com sucesso');
         this.uiManager.updateStatus('📏 Ajuste as dimensões e clique em "Aplicar Redimensionamento"', 'info');
       } else {
+        console.error('❌ Falha ao inicializar ImageResizer');
         this.uiManager.updateStatus('❌ Erro ao preparar redimensionamento', 'error');
         this.uiManager.showPage(3);
       }

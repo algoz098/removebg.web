@@ -2,19 +2,29 @@
 export class ImageResizer {
   constructor() {
     this.originalImage = null;
+    this.originalImageUrl = null;
     this.currentWidth = 0;
     this.currentHeight = 0;
     this.aspectRatio = 1;
     this.maintainAspect = true;
+    this.listenersSetup = false;
     
-    this.setupEventListeners();
+    // Não configurar listeners aqui, fazer apenas quando necessário
   }
 
   setupEventListeners() {
+    console.log('🔧 Configurando event listeners do ImageResizer...');
+    
     // Inputs de dimensões
     const widthInput = document.getElementById('resize-width');
     const heightInput = document.getElementById('resize-height');
     const maintainAspectCheckbox = document.getElementById('maintain-aspect');
+
+    console.log('🔍 Elementos encontrados:', {
+      widthInput: !!widthInput,
+      heightInput: !!heightInput,
+      maintainAspectCheckbox: !!maintainAspectCheckbox
+    });
 
     if (widthInput) {
       widthInput.addEventListener('input', (e) => {
@@ -36,6 +46,8 @@ export class ImageResizer {
 
     // Botões de preset
     const presetButtons = document.querySelectorAll('.preset-btn');
+    console.log(`🎛️ Encontrados ${presetButtons.length} botões de preset`);
+    
     presetButtons.forEach(btn => {
       btn.addEventListener('click', (e) => {
         const width = parseInt(e.target.dataset.width);
@@ -50,10 +62,24 @@ export class ImageResizer {
    */
   async initWithImage(imageBlob) {
     try {
+      console.log('🔄 Inicializando redimensionador com imagem:', imageBlob);
+      
+      // Configurar listeners se ainda não foram configurados
+      if (!this.listenersSetup) {
+        this.setupEventListeners();
+        this.listenersSetup = true;
+      }
+      
       this.originalImage = await this.createImageFromBlob(imageBlob);
       this.currentWidth = this.originalImage.width;
       this.currentHeight = this.originalImage.height;
       this.aspectRatio = this.currentWidth / this.currentHeight;
+      
+      console.log('📏 Dimensões da imagem:', {
+        width: this.currentWidth,
+        height: this.currentHeight,
+        aspectRatio: this.aspectRatio
+      });
       
       this.updatePreview();
       this.updateCurrentSizeInfo();
@@ -72,12 +98,18 @@ export class ImageResizer {
   createImageFromBlob(blob) {
     return new Promise((resolve, reject) => {
       const img = new Image();
+      const url = URL.createObjectURL(blob);
+      
       img.onload = () => {
-        URL.revokeObjectURL(img.src);
+        // Não revogar a URL imediatamente, precisamos dela para o preview
+        this.originalImageUrl = url;
         resolve(img);
       };
-      img.onerror = reject;
-      img.src = URL.createObjectURL(blob);
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('Falha ao carregar imagem'));
+      };
+      img.src = url;
     });
   }
 
@@ -86,8 +118,14 @@ export class ImageResizer {
    */
   updatePreview() {
     const previewImg = document.getElementById('resize-preview-img');
-    if (previewImg && this.originalImage) {
-      previewImg.src = this.originalImage.src;
+    if (previewImg && this.originalImageUrl) {
+      previewImg.src = this.originalImageUrl;
+      console.log('🖼️ Preview da imagem atualizado:', this.originalImageUrl);
+    } else {
+      console.error('❌ Elemento preview ou URL da imagem não encontrados:', {
+        previewImg: !!previewImg,
+        originalImageUrl: this.originalImageUrl
+      });
     }
   }
 
@@ -233,5 +271,16 @@ export class ImageResizer {
       valid: true,
       message: 'Dimensões válidas'
     };
+  }
+
+  /**
+   * Limpa os recursos da imagem
+   */
+  cleanup() {
+    if (this.originalImageUrl) {
+      URL.revokeObjectURL(this.originalImageUrl);
+      this.originalImageUrl = null;
+    }
+    this.originalImage = null;
   }
 }
