@@ -1,53 +1,50 @@
 # RemoveBG WebApp
 
-Uma aplicação web moderna para remoção automática de fundo de imagens usando IA, totalmente no navegador.
+Uma aplicação web moderna para remoção automática de fundo de imagens usando IA, totalmente no navegador. **Versão otimizada para produção**.
 
-## 📁 Estrutura do Projeto
+## ✨ Características da Versão de Produção
+
+- � **Otimizado para Performance**: Código minificado e logs de debug removidos
+- 📦 **Bundle Optimizado**: Chunks separados para vendor e aplicação
+- 🔄 **Service Worker**: Cache inteligente e funcionamento offline
+- 📱 **PWA Ready**: Instalável como aplicativo nativo
+- 🧹 **Código Limpo**: Removidos arquivos de debug e teste
+- ⚡ **Loading Rápido**: Splash screen otimizada e cache eficiente
+
+## �📁 Estrutura do Projeto (Produção)
 
 ```
 removebg.web/
-├── 📄 index.html                    # Página principal
+├── 📄 index.html                    # Página principal (otimizada)
 ├── 📄 sobre.html                    # Página sobre o projeto
-├── 📄 package.json                  # Dependências e scripts
-├── 📄 vite.config.js               # Configuração do Vite
-├── 📄 README.md                     # Este arquivo
-├── 📄 NETLIFY.md                    # Instruções de deploy no Netlify
+├── 📄 package.json                  # Scripts de produção
+├── 📄 vite.config.js               # Config otimizada para produção
 ├── 
-├── 📁 src/                          # Código fonte
+├── 📁 src/
 │   ├── 📁 css/                      # Estilos CSS modulares
-│   │   ├── base.css                 # Reset e estilos base
-│   │   ├── buttons.css              # Estilos dos botões
-│   │   ├── upload.css               # Área de upload
-│   │   ├── progress.css             # Barras de progresso
-│   │   ├── result.css               # Seção de resultado
-│   │   ├── layout.css               # Layout e responsivo
-│   │   ├── sobre.css                # Estilos da página sobre
-│   │   └── main.css                 # CSS principal (importa todos)
-│   │
-│   ├── 📁 js/                       # JavaScript modular
-│   │   ├── main.js                  # Aplicação principal
+│   ├── 📁 js/                       # JavaScript otimizado
+│   │   ├── main.js                  # Aplicação principal (sem debug)
+│   │   ├── splash-manager.js        # Splash otimizada
+│   │   ├── global-state.js          # Estado global (sem logs)
+│   │   ├── toast.js                 # Notificações (otimizada)
 │   │   ├── ui-manager.js            # Gerenciamento da UI
 │   │   ├── file-upload.js           # Upload de arquivos
 │   │   ├── background-processor.js  # Processamento de imagens
-│   │   ├── utils.js                 # Utilitários e helpers
+│   │   ├── model-preloader.js       # Pré-carregamento do modelo IA
+│   │   ├── cache-manager.js         # Gerenciamento de cache
+│   │   ├── utils.js                 # Utilitários
 │   │   ├── pwa.js                   # Funcionalidades PWA
-│   │   └── sw.js                    # Service Worker
+│   │   ├── sw.js                    # Service Worker
+│   │   └── original/                # 📁 Arquivos originais (backup)
+│   │       ├── main.original.js
+│   │       ├── splash-manager.original.js
+│   │       └── global-state.original.js
 │   │
 │   └── 📁 assets/                   # Recursos estáticos
-│       ├── manifest.json            # Manifest PWA
-│       ├── icon-base.svg           # Ícone base SVG
-│       ├── icons/                   # Ícones PWA
-│       └── screenshots/             # Screenshots para PWA
 │
-├── 📁 config/                       # Arquivos de configuração
-│   ├── vite.config.js              # Configuração Vite
-│   └── netlify.toml                 # Configuração Netlify
-│
-├── 📁 scripts/                      # Scripts de build e utilitários
-│   ├── build-pwa.sh               # Script de build PWA
-│   ├── generate-icons.js          # Gerador de ícones
-│   ├── create-basic-icons.js      # Criação de ícones básicos
-│   └── create-real-icons.js       # Criação de ícones avançados
+├── 📁 scripts/                      # Scripts de build
+└── 📁 config/                       # Configurações de deploy
+```
 │
 ├── 📁 public/                       # Arquivos públicos (Netlify)
 ├── 📁 dist/                         # Build de produção
@@ -88,6 +85,43 @@ removebg.web/
 - **IA**: @imgly/background-removal
 - **PWA**: Service Worker, Web App Manifest
 - **Deploy**: Netlify
+
+## 🏗️ Scripts de Produção
+
+```bash
+# Build otimizado para produção
+npm run build:prod
+
+# Build básico
+npm run build
+
+# Build para PWA (inclui manifest e service workers)
+npm run build:pwa
+
+# Build para deploy no Netlify
+npm run build:netlify
+
+# Analisar bundle
+npm run analyze
+
+# Limpar dist
+npm run clean
+
+# Desenvolvimento local
+npm run dev
+
+# Preview da build
+npm run preview
+```
+
+### Otimizações de Produção
+
+- **Console.log removidos**: Todos os logs de debug são removidos automaticamente pelo Terser
+- **Código minificado**: JavaScript e CSS minificados
+- **Tree shaking**: Código não utilizado é removido
+- **Chunks otimizados**: Vendor libs separadas em chunks próprios
+- **Service Worker**: Cache inteligente para funcionamento offline
+- **PWA completa**: Instalável como app nativo
 
 ## 📋 Pré-requisitos
 

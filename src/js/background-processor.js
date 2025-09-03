@@ -4,6 +4,7 @@ import { downloadBlob } from './utils.js';
 import { modelPreloader } from './model-preloader.js';
 import { cacheManager } from './cache-manager.js';
 import { toast } from './toast.js';
+import { globalState } from './global-state.js';
 
 export class BackgroundProcessor {
   constructor(uiManager) {
@@ -63,6 +64,9 @@ export class BackgroundProcessor {
       
       // Toast de sucesso
       toast.success('🎨 Fundo removido com sucesso!');
+      
+      // Armazenar resultado no estado global
+      globalState.setProcessedImageBlob(imageBlob);
       
       // Mostrar resultado
       await this.showResult(file, imageBlob);

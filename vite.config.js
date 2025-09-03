@@ -10,6 +10,7 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     minify: 'terser',
+    target: 'es2020',
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
@@ -27,9 +28,16 @@ export default defineConfig({
     terserOptions: {
       compress: {
         drop_console: true,
-        drop_debugger: true
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.warn', 'console.info']
+      },
+      mangle: {
+        safari10: true
       }
     }
   },
-  assetsInclude: ['**/*.wasm']
+  assetsInclude: ['**/*.wasm'],
+  define: {
+    __DEV__: JSON.stringify(false)
+  }
 })

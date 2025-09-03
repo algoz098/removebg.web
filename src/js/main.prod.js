@@ -237,7 +237,31 @@ class RemoveBGApp {
       }
     }
   }
+
+  downloadProcessedImage() {
+    const processedImageBlob = globalState.getProcessedImageBlob();
+    if (processedImageBlob) {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(processedImageBlob);
+      link.download = 'imagem_processada.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(link.href);
+    } else {
+      toast.show('❌ Imagem processada não está disponível', 'error');
+    }
+  }
 }
+
+// Expose global functions for onclick handlers
+window.downloadProcessedImage = function() {
+  if (window.removeBGApp) {
+    window.removeBGApp.downloadProcessedImage();
+  } else {
+    console.error('RemoveBG App not initialized');
+  }
+};
 
 window.removeBGApp = null;
 

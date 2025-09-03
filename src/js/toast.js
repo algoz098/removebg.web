@@ -178,7 +178,6 @@ export class ToastManager {
         content += progressBar;
       }
       
-      console.log('🔄 Atualizando toast com:', { message, percentage, content });
       return this.updateToast(toast, content);
     };
     
@@ -216,17 +215,14 @@ export class ToastManager {
    */
   updateToast(toast, message) {
     if (!toast) {
-      console.warn('⚠️ Toast não encontrado para atualizar');
       return false;
     }
     
     const messageElement = toast.querySelector('.toast-message');
     if (messageElement) {
       messageElement.innerHTML = message;
-      console.log('✅ Toast atualizado com sucesso');
       return true;
     } else {
-      console.warn('⚠️ Elemento .toast-message não encontrado no toast');
       return false;
     }
   }
