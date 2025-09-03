@@ -53,6 +53,79 @@
   font-family: monospace;
 }
 
+.crop-dimensions-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.crop-dimensions-group > label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dimension-inputs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.dimension-input-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+}
+
+.dimension-input-group label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  min-width: 50px;
+  text-align: right;
+}
+
+.dimension-input-group input {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  padding: 4px 8px;
+  width: 80px;
+  color: white;
+  font-size: 14px;
+  text-align: center;
+  font-family: monospace;
+}
+
+.dimension-input-group input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.dimension-input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.dimension-input-group span {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  min-width: 20px;
+}
+
+.dimension-separator {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0 5px;
+}
+
 .crop-help {
   text-align: center;
   color: rgba(255, 255, 255, 0.6);
@@ -85,6 +158,21 @@
   .crop-controls .btn-primary {
     width: 100%;
     max-width: 200px;
+  }
+
+  .dimension-inputs {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .dimension-input-group {
+    justify-content: center;
+    min-width: 160px;
+  }
+
+  .dimension-separator {
+    transform: rotate(90deg);
+    margin: 5px 0;
   }
 }
 

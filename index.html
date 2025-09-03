@@ -43,8 +43,6 @@
   <!-- Conteúdo Principal -->
   <main class="main-content" style="display: none;">
     <div class="container">
-      <h1>🎨 Remover Fundo de Imagem</h1>
-      
       <!-- Indicador de progresso das páginas -->
       <div class="page-indicator">
         <div class="step active" data-step="1">1</div>
@@ -58,8 +56,6 @@
     
     <!-- Página 1: Upload -->
     <div class="page" id="page-1">
-      <h2>📸 Selecione sua imagem</h2>
-      
       <!-- Input file escondido, fora da upload-area -->
       <input type="file" id="file-input" accept="image/*" style="display: none;" />
       
@@ -74,7 +70,6 @@
     
     <!-- Página 2: Preview e Confirmação -->
     <div class="page" id="page-2" style="display:none;">
-      <h2>📋 Confirme sua imagem</h2>
       <div class="preview-container">
         <img id="preview" />
         <div class="image-info">
@@ -91,16 +86,24 @@
     
     <!-- Página 2.5: Corte de Imagem -->
     <div class="page" id="page-crop" style="display:none;">
-      <h2>✂️ Cortar Imagem</h2>
-      <div class="crop-help">
-        <span class="crop-help-item">🖱️ Arraste os cantos e bordas para redimensionar</span>
-        <span class="crop-help-item">↔️ Clique e arraste o centro para mover</span>
-        <span class="crop-help-item">📐 A área selecionada (sem overlay escuro) será mantida</span>
-        <span class="crop-help-item">💡 Use "🔄 Resetar" para área de 80% ou "📐 Imagem Completa" para 100%</span>
-      </div>
       <div class="crop-container">
         <div class="crop-info">
-          <div>Área selecionada: <span class="crop-dimensions" id="crop-dimensions">-</span></div>
+          <div class="crop-dimensions-group">
+            <label>Área selecionada:</label>
+            <div class="dimension-inputs">
+              <div class="dimension-input-group">
+                <label for="crop-width">Largura:</label>
+                <input type="number" id="crop-width" min="1" placeholder="0">
+                <span>px</span>
+              </div>
+              <span class="dimension-separator">×</span>
+              <div class="dimension-input-group">
+                <label for="crop-height">Altura:</label>
+                <input type="number" id="crop-height" min="1" placeholder="0">
+                <span>px</span>
+              </div>
+            </div>
+          </div>
         </div>
         <div id="crop-preview"></div>
       </div>

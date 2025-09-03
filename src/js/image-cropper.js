@@ -18,12 +18,17 @@ export class ImageCropper {
     this.imageSize = { width: 0, height: 0 };
     this.isActive = false;
     this.drawPending = false; // Para controlar requestAnimationFrame
+    this.isUpdatingInputs = false; // Para evitar loop infinito de atualizações
     
     // Handles para redimensionamento
     this.handles = [
       'top-left', 'top-right', 'bottom-left', 'bottom-right',
       'top', 'bottom', 'left', 'right', 'move'
     ];
+
+    // Bind das funções para os event listeners
+    this.boundOnDimensionInputChange = this.onDimensionInputChange.bind(this);
+    this.boundValidateDimensionInput = this.validateDimensionInput.bind(this);
   }
 
   /**
@@ -233,6 +238,7 @@ export class ImageCropper {
     
     // Atualizar dimensões na UI se estiver ativa
     if (this.isActive) {
+      this.updateCropDimensions();
       this.draw();
     }
   }
@@ -252,12 +258,13 @@ export class ImageCropper {
     
     // Atualizar dimensões na UI se estiver ativa
     if (this.isActive) {
+      this.updateCropDimensions();
       this.draw();
     }
   }
 
   /**
-   * Adiciona event listeners do mouse
+   * Adiciona event listeners do mouse e dos inputs de dimensão
    */
   addEventListeners() {
     this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
@@ -267,6 +274,109 @@ export class ImageCropper {
     
     // Cursor do mouse
     this.canvas.addEventListener('mousemove', this.updateCursor.bind(this));
+    
+    // Event listeners dos inputs de dimensão
+    this.addDimensionInputListeners();
+  }
+
+  /**
+   * Adiciona event listeners para os inputs de dimensão
+   */
+  addDimensionInputListeners() {
+    const widthInput = document.getElementById('crop-width');
+    const heightInput = document.getElementById('crop-height');
+    
+    if (widthInput && heightInput) {
+      widthInput.addEventListener('input', this.boundOnDimensionInputChange);
+      heightInput.addEventListener('input', this.boundOnDimensionInputChange);
+      
+      // Eventos de validação
+      widthInput.addEventListener('blur', this.boundValidateDimensionInput);
+      heightInput.addEventListener('blur', this.boundValidateDimensionInput);
+    }
+  }
+
+  /**
+   * Manipula mudanças nos inputs de dimensão
+   */
+  onDimensionInputChange() {
+    if (this.isUpdatingInputs) return;
+    
+    const widthInput = document.getElementById('crop-width');
+    const heightInput = document.getElementById('crop-height');
+    
+    if (!widthInput || !heightInput) return;
+    
+    const newWidth = parseInt(widthInput.value) || 0;
+    const newHeight = parseInt(heightInput.value) || 0;
+    
+    // Validar se as dimensões são válidas
+    if (newWidth <= 0 || newHeight <= 0) return;
+    
+    // Calcular dimensões máximas da imagem original
+    const maxRealWidth = Math.round(this.imageSize.width / this.scale);
+    const maxRealHeight = Math.round(this.imageSize.height / this.scale);
+    
+    // Limitar as dimensões ao tamanho da imagem
+    const limitedWidth = Math.min(newWidth, maxRealWidth);
+    const limitedHeight = Math.min(newHeight, maxRealHeight);
+    
+    // Se os valores foram limitados, atualizar os inputs
+    if (limitedWidth !== newWidth || limitedHeight !== newHeight) {
+      this.isUpdatingInputs = true;
+      widthInput.value = limitedWidth;
+      heightInput.value = limitedHeight;
+      this.isUpdatingInputs = false;
+    }
+    
+    // Calcular novas dimensões do canvas
+    const canvasWidth = limitedWidth * this.scale;
+    const canvasHeight = limitedHeight * this.scale;
+    
+    this.updateCropAreaDimensions(canvasWidth, canvasHeight);
+  }
+
+  /**
+   * Valida e corrige os inputs de dimensão
+   */
+  validateDimensionInput(e) {
+    const input = e.target;
+    const value = parseInt(input.value);
+    
+    if (isNaN(value) || value <= 0) {
+      // Restaurar valor anterior
+      this.updateCropDimensions();
+    }
+  }
+
+  /**
+   * Atualiza as dimensões da área de corte mantendo a posição centralizada
+   */
+  updateCropAreaDimensions(newWidth, newHeight) {
+    const currentCenterX = this.cropArea.x + this.cropArea.width / 2;
+    const currentCenterY = this.cropArea.y + this.cropArea.height / 2;
+    
+    // Calcular nova posição para manter o centro
+    const newX = currentCenterX - newWidth / 2;
+    const newY = currentCenterY - newHeight / 2;
+    
+    // Ajustar posição para manter dentro dos limites da imagem
+    const adjustedX = Math.max(this.imageOffset.x, Math.min(newX, this.imageOffset.x + this.imageSize.width - newWidth));
+    const adjustedY = Math.max(this.imageOffset.y, Math.min(newY, this.imageOffset.y + this.imageSize.height - newHeight));
+    
+    // Atualizar área de corte
+    this.cropArea = {
+      x: adjustedX,
+      y: adjustedY,
+      width: newWidth,
+      height: newHeight
+    };
+    
+    // Atualizar dimensões nos inputs (sem disparar eventos)
+    this.updateCropDimensions();
+    
+    // Redesenhar
+    this.draw();
   }
 
   /**
@@ -303,6 +413,7 @@ export class ImageCropper {
       const deltaY = y - this.lastMousePos.y;
       
       this.updateCropArea(this.dragHandle, deltaX, deltaY);
+      this.updateCropDimensions();
       this.draw();
     }
     
@@ -532,13 +643,25 @@ export class ImageCropper {
    * Atualiza as informações das dimensões da área de corte na UI
    */
   updateCropDimensions() {
-    const dimensionsElement = document.getElementById('crop-dimensions');
-    if (dimensionsElement) {
+    const widthInput = document.getElementById('crop-width');
+    const heightInput = document.getElementById('crop-height');
+    
+    if (widthInput && heightInput) {
       // Calcular dimensões reais da área de corte
       const realWidth = Math.round(this.cropArea.width / this.scale);
       const realHeight = Math.round(this.cropArea.height / this.scale);
       
-      dimensionsElement.textContent = `${realWidth} x ${realHeight}px`;
+      // Calcular dimensões máximas da imagem
+      const maxRealWidth = Math.round(this.imageSize.width / this.scale);
+      const maxRealHeight = Math.round(this.imageSize.height / this.scale);
+      
+      // Atualizar inputs sem disparar eventos de mudança
+      this.isUpdatingInputs = true;
+      widthInput.value = realWidth;
+      heightInput.value = realHeight;
+      widthInput.max = maxRealWidth;
+      heightInput.max = maxRealHeight;
+      this.isUpdatingInputs = false;
     }
   }
 
@@ -715,11 +838,30 @@ export class ImageCropper {
    */
   destroy() {
     this.isActive = false;
+    
+    // Remover event listeners dos inputs
+    this.removeDimensionInputListeners();
+    
     if (this.canvas && this.canvas.parentNode) {
       this.canvas.parentNode.removeChild(this.canvas);
     }
     this.canvas = null;
     this.ctx = null;
     this.originalImage = null;
+  }
+
+  /**
+   * Remove event listeners dos inputs de dimensão
+   */
+  removeDimensionInputListeners() {
+    const widthInput = document.getElementById('crop-width');
+    const heightInput = document.getElementById('crop-height');
+    
+    if (widthInput && heightInput) {
+      widthInput.removeEventListener('input', this.boundOnDimensionInputChange);
+      heightInput.removeEventListener('input', this.boundOnDimensionInputChange);
+      widthInput.removeEventListener('blur', this.boundValidateDimensionInput);
+      heightInput.removeEventListener('blur', this.boundValidateDimensionInput);
+    }
   }
 }
