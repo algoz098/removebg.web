@@ -37,6 +37,7 @@ export class SplashManager {
       { id: 'cache', icon: '💾', text: 'Verificando cache...', size: '', progress: 0 },
       { id: 'assets', icon: '📦', text: 'Carregando arquivos...', size: '', progress: 0 },
       { id: 'ai-model', icon: '🧠', text: 'Carregando modelo de IA...', size: '', progress: 0 },
+      { id: 'cropper', icon: '✂️', text: 'Preparando ferramentas...', size: '', progress: 0 },
       { id: 'systems', icon: '⚙️', text: 'Iniciando sistemas...', size: '', progress: 0 }
     ];
 
@@ -160,6 +161,7 @@ export class SplashManager {
       await this.initializeCache();
       await this.loadBasicAssets();
       await this.loadAIModel();
+      await this.preloadCropper();
       await this.initializeSystems();
       this.finalizeSplash();
     } catch (error) {
@@ -204,6 +206,48 @@ export class SplashManager {
       this.updateProgress('ai-model', 100, 'Modelo carregado com sucesso!');
     } catch (error) {
       this.updateProgress('ai-model', 100, 'Erro no modelo, continuando...');
+    }
+  }
+
+  async preloadCropper() {
+    this.updateProgress('cropper', 0, 'Preparando interface de corte...');
+    
+    try {
+      // Importar o módulo do cropper
+      const { ImageCropper } = await import('./image-cropper.js');
+      this.updateProgress('cropper', 30, 'Módulo de corte carregado...');
+      
+      // Pré-instanciar o cropper para preparar tudo
+      window.preloadedImageCropper = new ImageCropper();
+      this.updateProgress('cropper', 60, 'Cropper inicializado...');
+      
+      // Simular uma pequena imagem para preparar canvas contexts
+      await this.prepareCanvasContext();
+      this.updateProgress('cropper', 100, 'Ferramentas de corte prontas!');
+      
+    } catch (error) {
+      console.warn('Erro no preload do cropper:', error);
+      this.updateProgress('cropper', 100, 'Cropper disponível sob demanda...');
+    }
+  }
+
+  async prepareCanvasContext() {
+    try {
+      // Criar um canvas temporário para "aquecer" o contexto
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = 100;
+      tempCanvas.height = 100;
+      const tempCtx = tempCanvas.getContext('2d');
+      
+      // Fazer algumas operações básicas para preparar o pipeline
+      tempCtx.fillStyle = 'rgba(0,0,0,0.1)';
+      tempCtx.fillRect(0, 0, 100, 100);
+      tempCtx.clearRect(0, 0, 100, 100);
+      
+      // Remover canvas temporário
+      tempCanvas.remove();
+    } catch (error) {
+      // Falha silenciosa
     }
   }
 

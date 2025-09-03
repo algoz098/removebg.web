@@ -17,6 +17,7 @@ export class ImageCropper {
     this.imageOffset = { x: 0, y: 0 };
     this.imageSize = { width: 0, height: 0 };
     this.isActive = false;
+    this.drawPending = false; // Para controlar requestAnimationFrame
     
     // Handles para redimensionamento
     this.handles = [
@@ -50,6 +51,36 @@ export class ImageCropper {
         reject(new Error('Erro ao carregar imagem'));
       };
       
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  /**
+   * Versão assíncrona otimizada do loadImage
+   */
+  async loadImageAsync(file) {
+    const img = await this.createImageFromFile(file);
+    const container = document.getElementById('crop-preview');
+    
+    if (!container) {
+      throw new Error('Container crop-preview não encontrado');
+    }
+    
+    // Usar requestAnimationFrame para dividir o trabalho
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    
+    // Inicializar de forma assíncrona
+    await this.initAsync(img, container);
+  }
+
+  /**
+   * Cria uma imagem a partir de um arquivo de forma assíncrona
+   */
+  async createImageFromFile(file) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('Erro ao carregar imagem'));
       img.src = URL.createObjectURL(file);
     });
   }
@@ -91,6 +122,59 @@ export class ImageCropper {
     this.draw();
     
     console.log('✂️ ImageCropper inicializado', {
+      canvasSize: `${this.canvas.width}x${this.canvas.height}`,
+      imageSize: `${this.imageSize.width}x${this.imageSize.height}`,
+      scale: this.scale
+    });
+    
+    return this;
+  }
+
+  /**
+   * Versão assíncrona do init que não bloqueia a UI
+   */
+  async initAsync(imageElement, containerElement) {
+    this.originalImage = imageElement;
+    this.isActive = true;
+    
+    // Etapa 1: Criar canvas
+    this.canvas = document.createElement('canvas');
+    this.canvas.className = 'crop-canvas';
+    this.ctx = this.canvas.getContext('2d');
+    
+    // Permitir que a UI respire
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    
+    // Etapa 2: Configurar dimensões
+    const containerRect = containerElement.getBoundingClientRect();
+    const canvasWidth = Math.min(containerRect.width || 600, 600);
+    const canvasHeight = Math.min(canvasWidth * 0.75, 450);
+    
+    this.canvas.width = canvasWidth;
+    this.canvas.height = canvasHeight;
+    
+    // Permitir que a UI respire
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    
+    // Etapa 3: Calcular dimensões da imagem
+    this.calculateImageDimensions();
+    this.resetCropArea();
+    
+    // Permitir que a UI respire
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    
+    // Etapa 4: Configurar interface
+    this.addEventListeners();
+    containerElement.innerHTML = '';
+    containerElement.appendChild(this.canvas);
+    
+    // Permitir que a UI respire antes do desenho final
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    
+    // Etapa 5: Desenho final
+    this.draw();
+    
+    console.log('✂️ ImageCropper inicializado assíncronamente', {
       canvasSize: `${this.canvas.width}x${this.canvas.height}`,
       imageSize: `${this.imageSize.width}x${this.imageSize.height}`,
       scale: this.scale
@@ -378,6 +462,20 @@ export class ImageCropper {
    * Desenha a imagem e a área de corte
    */
   draw() {
+    // Usar requestAnimationFrame para suavizar renderização
+    if (this.drawPending) return;
+    
+    this.drawPending = true;
+    requestAnimationFrame(() => {
+      this.performDraw();
+      this.drawPending = false;
+    });
+  }
+
+  /**
+   * Realiza o desenho real do canvas
+   */
+  performDraw() {
     // Limpar canvas
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     

@@ -52,7 +52,9 @@ class RemoveBGApp {
     this.uiManager = new UIManager();
     this.fileUploadManager = new FileUploadManager(this.uiManager);
     this.backgroundProcessor = new BackgroundProcessor(this.uiManager);
-    this.imageCropper = new ImageCropper();
+    
+    // Usar o cropper pré-carregado ou criar um novo se necessário
+    this.imageCropper = window.preloadedImageCropper || new ImageCropper();
     
     this.setupNavigationListeners();
     this.setupCropListeners();
@@ -187,20 +189,38 @@ class RemoveBGApp {
         return;
       }
 
-      // Mostrar página de crop
+      // Mostrar página de crop imediatamente
       this.uiManager.showPage('crop');
       
-      // Esperar um pouco para a página aparecer
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Mostrar indicador de carregamento
+      this.uiManager.updateStatus('✂️ Preparando interface de corte...', 'loading');
       
-      // Inicializar cropper com a imagem
-      await this.imageCropper.loadImage(file);
+      // Usar requestAnimationFrame para não bloquear a UI
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      
+      // Carregar imagem de forma assíncrona
+      await this.loadImageToCropper(file);
       
       this.uiManager.updateStatus('✂️ Ajuste a área de corte e clique em "Aplicar Corte"', 'info');
       
     } catch (error) {
       console.error('Erro ao inicializar crop:', error);
       this.uiManager.updateStatus('❌ Erro ao preparar ferramenta de corte', 'error');
+    }
+  }
+
+  async loadImageToCropper(file) {
+    // Dividir o carregamento em etapas para não bloquear a UI
+    try {
+      // Etapa 1: Mostrar que está carregando
+      this.uiManager.updateStatus('✂️ Carregando imagem...', 'loading');
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      
+      // Etapa 2: Carregar a imagem
+      await this.imageCropper.loadImageAsync(file);
+      
+    } catch (error) {
+      throw new Error(`Falha ao carregar imagem no cropper: ${error.message}`);
     }
   }
 
