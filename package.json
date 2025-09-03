@@ -2,17 +2,15 @@
   "name": "removebg-webapp",
   "version": "1.0.0",
   "description": "Webapp para remoção automática de fundo de imagens totalmente no navegador usando @imgly/background-removal.",
+  "main": "index.html",
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode production",
     "build:prod": "npm run clean && vite build --mode production && npm run build:pwa",
     "build:pwa": "cp public/manifest.json dist/ && cp -r public/icons dist/ && cp -r public/screenshots dist/ && cp public/_redirects dist/",
-    "build:netlify": "npm run build:prod && mkdir -p netlify-deploy-$(date +%Y%m%d-%H%M%S) && cp -r dist/* netlify-deploy-$(date +%Y%m%d-%H%M%S)/ && echo 'Netlify deploy folder created: netlify-deploy-'$(date +%Y%m%d-%H%M%S)",
-    "deploy:prepare": "npm run build:netlify",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "analyze": "npm run build -- --analyze",
-    "generate-icons": "node scripts/generate-icons.js"
+    "analyze": "npm run build -- --analyze"
   },
   "dependencies": {
     "@imgly/background-removal": "^1.4.5"
@@ -20,5 +18,8 @@
   "devDependencies": {
     "terser": "^5.44.0",
     "vite": "^4.0.0"
-  }
+  },
+  "keywords": ["remove-background", "image-processing", "pwa", "ai"],
+  "author": "",
+  "license": "MIT"
 }

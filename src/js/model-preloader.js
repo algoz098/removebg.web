@@ -24,7 +24,6 @@ class ModelPreloader {
       return this.preloadPromise;
     }
 
-    console.log('🤖 Iniciando pré-carregamento do modelo...');
     this.isPreloading = true;
     this.preloadPromise = this.preloadModel();
     return this.preloadPromise;
@@ -34,15 +33,12 @@ class ModelPreloader {
    * Pré-carrega o modelo
    */
   async preloadModel() {
-    try {
-      console.log('🧠 Carregando modelo de IA...');
-      
+    try {      
       // Inicializar cache se disponível
       try {
         await cacheManager.init();
-        console.log('💾 Cache manager inicializado');
       } catch (error) {
-        console.log('⚠️ Cache manager não disponível:', error.message);
+        // Cache não disponível, continuar sem cache
       }
 
       // Criar imagem mínima para inicializar
@@ -57,8 +53,6 @@ class ModelPreloader {
       const blob = await new Promise(resolve => {
         canvas.toBlob(resolve, 'image/png');
       });
-
-      console.log('🚀 Fazendo chamada de teste do modelo...');
       
       // Fazer chamada simples para inicializar
       const result = await removeBackground(blob, {
@@ -69,12 +63,10 @@ class ModelPreloader {
       this.isModelLoaded = true;
       this.isPreloading = false;
       
-      console.log('✅ Modelo pré-carregado com sucesso!');
       return result;
       
     } catch (error) {
       this.isPreloading = false;
-      console.warn('⚠️ Falha no pré-carregamento do modelo:', error);
       // Não é um erro crítico, modelo ainda pode carregar na demanda
     }
   }
@@ -92,7 +84,6 @@ class ModelPreloader {
         await this.preloadPromise;
         return true;
       } catch (error) {
-        console.warn('Modelo não foi pré-carregado, mas tentará carregar na demanda');
         return false;
       }
     }

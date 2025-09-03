@@ -8,7 +8,6 @@ class NavigationManager {
     this.setupNavigationInterception();
     this.setupPageLoadOptimization();
     
-    console.log('🚪 NavigationManager inicializado');
   }
 
   /**
@@ -38,7 +37,6 @@ class NavigationManager {
     const referrer = document.referrer;
     
     if (currentPath === '/' && referrer.includes('sobre.html')) {
-      console.log('🔄 Detectada navegação de volta à página inicial');
       this.optimizeReturnToHome();
     }
 
@@ -70,7 +68,6 @@ class NavigationManager {
     
     // Se está indo para home e app já foi inicializado, marcar para pular splash
     if (href === '/' && globalState.isSplashCompleted()) {
-      console.log('⚡ Navegação para home com splash já completado');
       
       // Garantir que não vai mostrar splash novamente
       sessionStorage.setItem('skipSplash', 'true');
@@ -80,7 +77,6 @@ class NavigationManager {
     
     // Se está indo para home e cache está pronto, preparar para carregamento rápido
     if (href === '/' && globalState.isCacheReady()) {
-      console.log('⚡ Cache pronto, navegação otimizada para home');
       
       // Salvar flag para carregamento rápido
       sessionStorage.setItem('fastLoad', 'true');
@@ -98,7 +94,6 @@ class NavigationManager {
     const stats = globalState.getStats();
     
     if (globalState.isCacheReady()) {
-      console.log('✅ Cache disponível para carregamento rápido:', stats);
       
       // Sinalizar para splash manager pular inicialização pesada
       sessionStorage.setItem('fastLoad', 'true');
@@ -113,7 +108,6 @@ class NavigationManager {
    * Lidar com navegação via histórico (botão voltar/avançar)
    */
   handleHistoryNavigation(event) {
-    console.log('🔙 Navegação via histórico detectada:', event.state);
     
     // Se voltando para home com cache pronto
     if (window.location.pathname === '/' && globalState.isCacheReady()) {
@@ -171,7 +165,6 @@ class NavigationManager {
                   sessionStorage.getItem('fastLoadSource');
     
     if (fastLoad === 'true') {
-      console.log('⚡ Fast load ativado:', reason);
       
       // Limpar flags para próxima navegação
       sessionStorage.removeItem('fastLoad');
@@ -199,7 +192,6 @@ class NavigationManager {
       return; // Não pré-carregar em conexões lentas
     }
 
-    console.log('🚀 Pré-carregando recursos para:', href);
     
     // Criar link prefetch
     const prefetch = document.createElement('link');

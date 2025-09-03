@@ -58,8 +58,7 @@ class GlobalStateManager {
         appInitialized: false,
         currentPage: window.location.pathname,
         navigationCount: 1,
-        lastPageLoad: Date.now(),
-        processedImageBlob: null
+        lastPageLoad: Date.now()
       },
       pwa: {
         isInstalled: false,
@@ -155,12 +154,6 @@ class GlobalStateManager {
     this.saveState();
   }
 
-  setSplashCompleted(completed = true) {
-    this.state.session.splashCompleted = completed;
-    this.state.session.splashTimestamp = Date.now();
-    this.saveState();
-  }
-
   isSplashCompleted() {
     return this.state.session.splashCompleted === true;
   }
@@ -215,23 +208,6 @@ class GlobalStateManager {
     this.state.pwa.swRegistered = true;
     this.state.pwa.lastSwUpdate = Date.now();
     this.saveState();
-  }
-
-  setProcessedImageBlob(blob) {
-    this.state.session.processedImageBlob = blob;
-    // Note: Not saving to localStorage as blobs can't be serialized
-  }
-
-  getProcessedImageBlob() {
-    return this.state.session.processedImageBlob;
-  }
-
-  clearProcessedImageBlob() {
-    if (this.state.session.processedImageBlob) {
-      // Clean up the blob URL if it exists
-      URL.revokeObjectURL(this.state.session.processedImageBlob);
-    }
-    this.state.session.processedImageBlob = null;
   }
 }
 

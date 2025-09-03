@@ -66,10 +66,8 @@ export class CacheManager {
         request.onerror = () => reject(request.error);
       });
 
-      console.log(`📦 Recurso cachado: ${url} (${this.formatBytes(resource.size)})`);
       return true;
     } catch (error) {
-      console.error('❌ Erro ao cachear recurso:', error);
       return false;
     }
   }
@@ -100,11 +98,9 @@ export class CacheManager {
       }
 
       const readTime = Date.now() - startTime;
-      console.log(`💾 Cache hit: ${url} (${this.formatBytes(resource.size)} em ${readTime}ms - ${this.formatSpeed(resource.size, readTime)})`);
 
       return resource.data;
     } catch (error) {
-      console.error('❌ Erro ao recuperar recurso do cache:', error);
       return null;
     }
   }
@@ -125,10 +121,8 @@ export class CacheManager {
         request.onerror = () => reject(request.error);
       });
 
-      console.log(`🗑️ Recurso removido do cache: ${url}`);
       return true;
     } catch (error) {
-      console.error('❌ Erro ao remover recurso do cache:', error);
       return false;
     }
   }
@@ -167,12 +161,10 @@ export class CacheManager {
       });
 
       if (deletedCount > 0) {
-        console.log(`🧹 Limpeza: ${deletedCount} recursos expirados removidos`);
       }
       
       return deletedCount;
     } catch (error) {
-      console.error('❌ Erro na limpeza de recursos:', error);
       return 0;
     }
   }
@@ -207,7 +199,6 @@ export class CacheManager {
         types
       };
     } catch (error) {
-      console.error('❌ Erro ao obter estatísticas:', error);
       return { count: 0, totalSize: 0, formattedSize: '0 B', types: {} };
     }
   }
@@ -228,11 +219,9 @@ export class CacheManager {
         request.onerror = () => reject(request.error);
       });
 
-      console.log('🗑️ Cache limpo completamente');
       toast.success('Cache limpo com sucesso!');
       return true;
     } catch (error) {
-      console.error('❌ Erro ao limpar cache:', error);
       toast.error('Erro ao limpar cache');
       return false;
     }
@@ -256,7 +245,6 @@ export class CacheManager {
     // Primeiro tenta buscar no cache
     const cachedData = await this.getCachedResource(url);
     if (cachedData) {
-      console.log(`⚡ Cache hit: ${url}`);
       
       // Retorna Response compatível
       if (cachedData instanceof ArrayBuffer) {
@@ -270,7 +258,6 @@ export class CacheManager {
 
     // Se não está no cache, faz fetch normal
     try {
-      console.log(`🌐 Cache miss, baixando: ${url}`);
       const response = await fetch(url, options);
       
       if (response.ok) {
@@ -287,13 +274,11 @@ export class CacheManager {
         clone.arrayBuffer().then(buffer => {
           this.cacheResource(url, buffer, type);
         }).catch(err => {
-          console.warn('⚠️ Falha ao cachear recurso:', url, err);
         });
       }
       
       return response;
     } catch (error) {
-      console.error(`❌ Erro no fetch: ${url}`, error);
       throw error;
     }
   }
@@ -311,7 +296,6 @@ export class CacheManager {
       // Mostrar estatísticas se houver recursos
       const stats = await this.getCacheStats();
       if (stats.count > 0) {
-        console.log(`📊 Cache stats: ${stats.count} recursos, ${stats.formattedSize} total`);
         
         // Notificar usuário sobre cache existente
         setTimeout(() => {
@@ -320,7 +304,6 @@ export class CacheManager {
       }
       
     } catch (error) {
-      console.error('❌ Erro na inicialização do cache:', error);
     }
   }
 

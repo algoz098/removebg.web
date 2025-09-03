@@ -20,10 +20,8 @@ export class BackgroundProcessor {
       // Verificar se modelo foi pré-carregado no splash
       if (window.modelReady && window.lastModelInit) {
         const timeSinceInit = Date.now() - window.lastModelInit;
-        console.log(`⚡ Modelo pré-carregado! Processamento instantâneo (${Math.round(timeSinceInit/1000)}s atrás).`);
         this.uiManager.updateProgress(30, 'Modelo já inicializado, processando...');
       } else {
-        console.log('⚠️ Modelo não foi pré-carregado, inicializando agora...');
         this.uiManager.updateProgress(10, 'Inicializando modelo...');
       }
       
@@ -53,16 +51,12 @@ export class BackgroundProcessor {
       // Relatório de performance simplificado
       if (window.modelReady) {
         if (processingTime < 1000) {
-          console.log(`🚀 Processamento instantâneo! (${processingTime}ms) - Modelo pré-carregado funcionou!`);
         } else {
-          console.log(`⚡ Processamento rápido! (${Math.round(processingTime/1000)}s) - Usando cache`);
         }
       } else {
-        console.log(`⚠️ Modelo inicializado durante processamento. Tempo: ${Math.round(processingTime/1000)}s`);
       }
       
       // Log de sucesso
-      console.log('🎨 Fundo removido com sucesso!');
       
       // Armazenar resultado no estado global
       globalState.setProcessedImageBlob(imageBlob);
@@ -73,7 +67,6 @@ export class BackgroundProcessor {
       return imageBlob;
       
     } catch (error) {
-      console.error('Erro no processamento:', error);
       this.uiManager.updateStatus(`❌ Erro ao processar imagem: ${error.message}`, 'error');
       throw error;
     }
@@ -155,7 +148,6 @@ export class BackgroundProcessor {
     downloadBlob(blob, filename);
     
     // Log de download
-    console.log('💾 Download iniciado!');
     this.uiManager.updateStatus('✅ Download iniciado!');
   }
 }
