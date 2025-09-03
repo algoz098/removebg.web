@@ -146,6 +146,11 @@ export class ImageCropper {
       imageSize: this.imageSize,
       imageOffset: this.imageOffset
     });
+    
+    // Atualizar dimensões na UI se estiver ativa
+    if (this.isActive) {
+      this.draw();
+    }
   }
 
   /**
@@ -160,6 +165,11 @@ export class ImageCropper {
     };
     
     console.log('📐 Área de corte definida para imagem completa:', this.cropArea);
+    
+    // Atualizar dimensões na UI se estiver ativa
+    if (this.isActive) {
+      this.draw();
+    }
   }
 
   /**
@@ -415,6 +425,23 @@ export class ImageCropper {
     
     // Desenhar handles
     this.drawHandles();
+    
+    // Atualizar informações das dimensões
+    this.updateCropDimensions();
+  }
+
+  /**
+   * Atualiza as informações das dimensões da área de corte na UI
+   */
+  updateCropDimensions() {
+    const dimensionsElement = document.getElementById('crop-dimensions');
+    if (dimensionsElement) {
+      // Calcular dimensões reais da área de corte
+      const realWidth = Math.round(this.cropArea.width / this.scale);
+      const realHeight = Math.round(this.cropArea.height / this.scale);
+      
+      dimensionsElement.textContent = `${realWidth} x ${realHeight}px`;
+    }
   }
 
   /**

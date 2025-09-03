@@ -159,7 +159,7 @@ class RemoveBGApp {
 
     if (fullCropBtn) {
       fullCropBtn.addEventListener('click', () => {
-        this.imageCropper.setFullImageCrop();
+        this.imageCropper.setFullCropArea();
         this.uiManager.updateStatus('📐 Imagem completa selecionada', 'info');
       });
     }
