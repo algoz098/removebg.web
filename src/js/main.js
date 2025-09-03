@@ -89,6 +89,7 @@ class RemoveBGApp {
     const proceedToProcess = document.getElementById('proceed-to-process');
     const processNew = document.getElementById('process-new');
     const backToPreview = document.getElementById('back-to-preview');
+    const backToPreviewFromResult = document.getElementById('back-to-preview-from-result');
 
     if (backToUpload) {
       backToUpload.addEventListener('click', () => {
@@ -132,6 +133,13 @@ class RemoveBGApp {
 
     if (backToPreview) {
       backToPreview.addEventListener('click', () => {
+        this.uiManager.showPage(2);
+        this.uiManager.clearResults();
+      });
+    }
+
+    if (backToPreviewFromResult) {
+      backToPreviewFromResult.addEventListener('click', () => {
         this.uiManager.showPage(2);
         this.uiManager.clearResults();
       });
