@@ -32,6 +32,12 @@ class GlobalStateManager {
           splashTimestamp: sessionState.splashTimestamp || null
         },
         
+        processing: {
+          processedImageBlob: null,
+          originalFileName: null,
+          processedAt: null
+        },
+        
         pwa: {
           isInstalled: persistentState.pwa?.isInstalled || false,
           swRegistered: persistentState.pwa?.swRegistered || false,
@@ -59,6 +65,11 @@ class GlobalStateManager {
         currentPage: window.location.pathname,
         navigationCount: 1,
         lastPageLoad: Date.now()
+      },
+      processing: {
+        processedImageBlob: null,
+        originalFileName: null,
+        processedAt: null
       },
       pwa: {
         isInstalled: false,
@@ -208,6 +219,37 @@ class GlobalStateManager {
     this.state.pwa.swRegistered = true;
     this.state.pwa.lastSwUpdate = Date.now();
     this.saveState();
+  }
+
+  // Gerenciamento de imagem processada
+  setProcessedImageBlob(blob, originalFileName = null) {
+    // Como blob não pode ser serializado, mantemos apenas na memória
+    this.state.processing = {
+      processedImageBlob: blob,
+      originalFileName: originalFileName,
+      processedAt: Date.now()
+    };
+    // Não salvamos no localStorage pois Blob não é serializável
+  }
+
+  getProcessedImageBlob() {
+    return this.state.processing?.processedImageBlob || null;
+  }
+
+  getProcessedImageInfo() {
+    return {
+      originalFileName: this.state.processing?.originalFileName || null,
+      processedAt: this.state.processing?.processedAt || null,
+      hasProcessedImage: !!this.state.processing?.processedImageBlob
+    };
+  }
+
+  clearProcessedImage() {
+    this.state.processing = {
+      processedImageBlob: null,
+      originalFileName: null,
+      processedAt: null
+    };
   }
 }
 

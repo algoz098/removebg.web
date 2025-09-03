@@ -59,7 +59,7 @@ export class BackgroundProcessor {
       // Log de sucesso
       
       // Armazenar resultado no estado global
-      globalState.setProcessedImageBlob(imageBlob);
+      globalState.setProcessedImageBlob(imageBlob, file.name);
       
       // Mostrar resultado - usar displayName se fornecido
       await this.showResult(file, imageBlob, displayName);
