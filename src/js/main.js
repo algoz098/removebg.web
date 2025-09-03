@@ -300,18 +300,35 @@ class RemoveBGApp {
     if (finalResult && imageBlob) {
       const imageUrl = URL.createObjectURL(imageBlob);
       
-      // Criar container para resultado final
-      finalResult.innerHTML = `
-        <div class="result-image-container">
-          <img src="${imageUrl}" alt="Imagem final redimensionada" class="result-image" />
-          <div class="result-actions">
-            <button class="download-btn" onclick="downloadFinalImage()">
-              💾 Baixar Imagem Final
-            </button>
+      // Criar uma imagem temporária para obter dimensões
+      const tempImg = new Image();
+      tempImg.onload = () => {
+        const width = tempImg.width;
+        const height = tempImg.height;
+        const sizeInMB = (imageBlob.size / (1024 * 1024)).toFixed(2);
+        
+        // Criar container para resultado final com informações
+        finalResult.innerHTML = `
+          <div class="result-image-container">
+            <div class="image-info">
+              <h3>🎉 Imagem Final Processada</h3>
+              <p>Dimensões: ${width} × ${height} px</p>
+              <p>Tamanho: ${sizeInMB} MB</p>
+            </div>
+            <img src="${imageUrl}" alt="Imagem final redimensionada" class="result-image" />
+            <div class="result-actions">
+              <button class="download-btn" onclick="downloadFinalImage()">
+                💾 Baixar Imagem Final
+              </button>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+        
+        // Limpar URL da imagem temporária
+        URL.revokeObjectURL(tempImg.src);
+      };
       
+      tempImg.src = imageUrl;
       this.uiManager.showPage(4);
     }
   }

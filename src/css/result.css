@@ -61,3 +61,75 @@
 .download-btn:active {
   transform: translateY(0);
 }
+
+/* Resultado Final - Container para imagem redimensionada */
+.result-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.result-image-container .image-info {
+  text-align: center;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.result-image-container .image-info h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.result-image-container .image-info p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.result-image {
+  max-width: 100%;
+  max-height: 60vh;
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  object-fit: contain;
+}
+
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Responsivo para resultado final */
+@media (max-width: 768px) {
+  .result-image {
+    max-height: 50vh;
+  }
+  
+  .result-image-container {
+    padding: 15px;
+    margin: 15px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .result-image {
+    max-height: 40vh;
+  }
+  
+  .result-image-container {
+    padding: 10px;
+    margin: 10px 0;
+  }
+}
