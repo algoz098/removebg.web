@@ -204,7 +204,7 @@ class RemoveBGApp {
         this.fileUploadManager.setSelectedFile(croppedFile);
         
         // Mostrar preview da imagem cortada
-        this.uiManager.showImagePreview(croppedFile);
+        await this.fileUploadManager.showPreview(croppedFile);
         
         // Voltar para a página de preview
         this.uiManager.showPage(2);
