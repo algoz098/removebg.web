@@ -2,6 +2,7 @@
 import { UIManager } from './ui-manager.js';
 import { FileUploadManager } from './file-upload.js';
 import { BackgroundProcessor } from './background-processor.js';
+// import { ImageCropper } from './image-cropper.js';
 import { modelPreloader } from './model-preloader.js';
 import { cacheManager } from './cache-manager.js';
 import { globalState } from './global-state.js';
@@ -11,6 +12,7 @@ class RemoveBGApp {
     this.uiManager = null;
     this.fileUploadManager = null;
     this.backgroundProcessor = null;
+    this.imageCropper = null;
     this.isReady = false;
     
     this.waitForAppReady();
@@ -50,8 +52,10 @@ class RemoveBGApp {
     this.uiManager = new UIManager();
     this.fileUploadManager = new FileUploadManager(this.uiManager);
     this.backgroundProcessor = new BackgroundProcessor(this.uiManager);
+    // this.imageCropper = new ImageCropper();
     
     this.setupNavigationListeners();
+    this.setupCropListeners();
     this.setupCacheManagement();
     this.uiManager.updateStatus('✅ Pronto para processar imagens!');
     this.uiManager.showPage(1);
@@ -131,6 +135,70 @@ class RemoveBGApp {
         this.uiManager.showPage(2);
         this.uiManager.clearResults();
       });
+    }
+  }
+
+  setupCropListeners() {
+    const cropImageBtn = document.getElementById('crop-image');
+    const resetCropBtn = document.getElementById('reset-crop');
+    const fullCropBtn = document.getElementById('full-crop');
+    const applyCropBtn = document.getElementById('apply-crop');
+    
+    if (cropImageBtn) {
+      cropImageBtn.addEventListener('click', () => {
+        this.handleCropImage();
+      });
+    }
+
+    if (resetCropBtn) {
+      resetCropBtn.addEventListener('click', () => {
+        this.uiManager.updateStatus('🔄 Área de corte resetada', 'info');
+        // this.imageCropper.resetCropArea();
+      });
+    }
+
+    if (fullCropBtn) {
+      fullCropBtn.addEventListener('click', () => {
+        this.uiManager.updateStatus('📐 Imagem completa selecionada', 'info');
+        // this.imageCropper.setFullImageCrop();
+      });
+    }
+
+    if (applyCropBtn) {
+      applyCropBtn.addEventListener('click', () => {
+        this.handleApplyCrop();
+      });
+    }
+  }
+
+  async handleCropImage() {
+    try {
+      const file = this.fileUploadManager.getSelectedFile();
+      if (!file) {
+        this.uiManager.updateStatus('❌ Nenhum arquivo selecionado para cortar', 'error');
+        return;
+      }
+
+      // Por enquanto, mostrar página de crop com mensagem temporária
+      this.uiManager.showPage('crop');
+      
+      this.uiManager.updateStatus('✂️ Funcionalidade de corte em desenvolvimento. Clique "Voltar" para continuar.', 'info');
+      
+    } catch (error) {
+      console.error('Erro ao inicializar crop:', error);
+      this.uiManager.updateStatus('❌ Erro ao preparar ferramenta de corte', 'error');
+    }
+  }
+
+  async handleApplyCrop() {
+    try {
+      // Por enquanto, apenas voltar para preview
+      this.uiManager.showPage(2);
+      this.uiManager.updateStatus('ℹ️ Funcionalidade de corte em desenvolvimento. Processando imagem original.', 'info');
+      
+    } catch (error) {
+      console.error('Erro ao aplicar crop:', error);
+      this.uiManager.updateStatus('❌ Erro ao aplicar corte', 'error');
     }
   }
 

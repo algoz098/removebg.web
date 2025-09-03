@@ -283,6 +283,10 @@ export class FileUploadManager {
     return this.selectedFile;
   }
 
+  setSelectedFile(file) {
+    this.selectedFile = file;
+  }
+
   clearSelectedFile() {
     this.selectedFile = null;
     const fileInput = document.getElementById('file-input');
