@@ -26,12 +26,10 @@ export class FileUploadManager {
   initializeListeners() {
     const fileInput = document.getElementById('file-input');
     const uploadArea = document.getElementById('upload-area');
-    const fallbackBtn = document.getElementById('fallback-upload-btn');
     
     console.log('🎯 Elementos encontrados:', {
       fileInput: !!fileInput,
       uploadArea: !!uploadArea,
-      fallbackBtn: !!fallbackBtn,
       fileInputType: fileInput?.type,
       uploadAreaTagName: uploadArea?.tagName
     });
@@ -86,16 +84,6 @@ export class FileUploadManager {
         this.triggerFileInput();
       }
     });
-    
-    // Listener para botão de fallback
-    if (fallbackBtn) {
-      fallbackBtn.addEventListener('click', (e) => {
-        console.log('🔧 Botão de fallback clicado');
-        e.preventDefault();
-        e.stopPropagation();
-        this.triggerFileInput();
-      });
-    }
     
     // Fallback listener adicional para debugging
     document.addEventListener('click', (e) => {
