@@ -52,6 +52,10 @@
         <div class="step" data-step="2.5">✂️</div>
         <div class="step-line"></div>
         <div class="step" data-step="3">3</div>
+        <div class="step-line"></div>
+        <div class="step" data-step="3.5">📏</div>
+        <div class="step-line"></div>
+        <div class="step" data-step="4">4</div>
       </div>
     
     <!-- Página 1: Upload -->
@@ -135,8 +139,77 @@
         <div class="page-actions">
           <button class="btn-secondary" id="process-new" aria-label="Process a new image">🆕 Nova Imagem</button>
           <button class="btn-secondary" id="back-to-preview-from-result" aria-label="Go back to preview">⬅️ Voltar</button>
+          <button class="btn-primary" id="resize-image" aria-label="Resize the processed image">📏 Redimensionar</button>
         </div>
+      </div>
+    </div>
+    
+    <!-- Página 3.5: Redimensionamento -->
+    <div class="page" id="page-resize" style="display:none;">
+      <h2>📏 Redimensionar Imagem</h2>
+      
+      <div class="resize-container">
+        <div class="resize-preview">
+          <img id="resize-preview-img" alt="Preview da imagem" />
         </div>
+        
+        <div class="resize-controls">
+          <div class="resize-size-info">
+            <h4>Tamanho Atual</h4>
+            <span id="current-size">-</span>
+          </div>
+          
+          <div class="resize-input-group">
+            <h4>Novo Tamanho</h4>
+            <div class="dimension-inputs">
+              <div class="dimension-input-group">
+                <label for="resize-width">Largura:</label>
+                <input type="number" id="resize-width" min="1" placeholder="0">
+                <span>px</span>
+              </div>
+              <span class="dimension-separator">×</span>
+              <div class="dimension-input-group">
+                <label for="resize-height">Altura:</label>
+                <input type="number" id="resize-height" min="1" placeholder="0">
+                <span>px</span>
+              </div>
+            </div>
+            
+            <div class="resize-options">
+              <label class="checkbox-label">
+                <input type="checkbox" id="maintain-aspect" checked>
+                <span>Manter proporção</span>
+              </label>
+            </div>
+            
+            <div class="resize-presets">
+              <h5>Tamanhos Predefinidos</h5>
+              <div class="preset-buttons">
+                <button class="preset-btn" data-width="512" data-height="512">512×512</button>
+                <button class="preset-btn" data-width="1024" data-height="1024">1024×1024</button>
+                <button class="preset-btn" data-width="1920" data-height="1080">HD (1920×1080)</button>
+                <button class="preset-btn" data-width="3840" data-height="2160">4K (3840×2160)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="page-actions">
+        <button class="btn-secondary" id="back-to-result">⬅️ Voltar</button>
+        <button class="btn-primary" id="apply-resize">✅ Aplicar Redimensionamento</button>
+      </div>
+    </div>
+    
+    <!-- Página 4: Resultado Final -->
+    <div class="page" id="page-4" style="display:none;">
+      <h2>✨ Resultado Final</h2>
+      
+      <div id="final-result" class="result"></div>
+      
+      <div class="page-actions">
+        <button class="btn-secondary" id="process-new-final" aria-label="Process a new image">🆕 Nova Imagem</button>
+        <button class="btn-secondary" id="back-to-resize" aria-label="Go back to resize">⬅️ Voltar ao Redimensionamento</button>
       </div>
     </div>
   </main>  <div id="status"></div>

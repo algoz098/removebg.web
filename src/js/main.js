@@ -3,6 +3,7 @@ import { UIManager } from './ui-manager.js';
 import { FileUploadManager } from './file-upload.js';
 import { BackgroundProcessor } from './background-processor.js';
 import { ImageCropper } from './image-cropper.js';
+import { ImageResizer } from './image-resizer.js';
 import { modelPreloader } from './model-preloader.js';
 import { cacheManager } from './cache-manager.js';
 import { globalState } from './global-state.js';
@@ -13,6 +14,7 @@ class RemoveBGApp {
     this.fileUploadManager = null;
     this.backgroundProcessor = null;
     this.imageCropper = null;
+    this.imageResizer = null;
     this.isReady = false;
     
     this.waitForAppReady();
@@ -52,12 +54,14 @@ class RemoveBGApp {
     this.uiManager = new UIManager();
     this.fileUploadManager = new FileUploadManager(this.uiManager);
     this.backgroundProcessor = new BackgroundProcessor(this.uiManager);
+    this.imageResizer = new ImageResizer();
     
     // Usar o cropper pré-carregado ou criar um novo se necessário
     this.imageCropper = window.preloadedImageCropper || new ImageCropper();
     
     this.setupNavigationListeners();
     this.setupCropListeners();
+    this.setupResizeListeners();
     this.setupCacheManagement();
     this.uiManager.updateStatus('✅ Pronto para processar imagens!');
     this.uiManager.showPage(1);
@@ -178,6 +182,126 @@ class RemoveBGApp {
       applyCropBtn.addEventListener('click', () => {
         this.handleApplyCrop();
       });
+    }
+  }
+
+  setupResizeListeners() {
+    const resizeImageBtn = document.getElementById('resize-image');
+    const backToResult = document.getElementById('back-to-result');
+    const applyResizeBtn = document.getElementById('apply-resize');
+    const backToResize = document.getElementById('back-to-resize');
+    const processNewFinal = document.getElementById('process-new-final');
+
+    if (resizeImageBtn) {
+      resizeImageBtn.addEventListener('click', () => {
+        this.handleResizeImage();
+      });
+    }
+
+    if (backToResult) {
+      backToResult.addEventListener('click', () => {
+        this.uiManager.showPage(3);
+      });
+    }
+
+    if (applyResizeBtn) {
+      applyResizeBtn.addEventListener('click', () => {
+        this.handleApplyResize();
+      });
+    }
+
+    if (backToResize) {
+      backToResize.addEventListener('click', () => {
+        this.uiManager.showPage('resize');
+      });
+    }
+
+    if (processNewFinal) {
+      processNewFinal.addEventListener('click', () => {
+        this.uiManager.showPage(1);
+        this.uiManager.clearPreview();
+        this.uiManager.clearResults();
+        this.fileUploadManager.clearSelectedFile();
+      });
+    }
+  }
+
+  async handleResizeImage() {
+    try {
+      const processedImageBlob = globalState.getProcessedImageBlob();
+      if (!processedImageBlob) {
+        this.uiManager.updateStatus('❌ Nenhuma imagem processada encontrada', 'error');
+        return;
+      }
+
+      // Mostrar página de redimensionamento
+      this.uiManager.showPage('resize');
+      
+      // Mostrar indicador de carregamento
+      this.uiManager.updateStatus('📏 Preparando interface de redimensionamento...', 'loading');
+      
+      // Inicializar redimensionador com a imagem processada
+      const success = await this.imageResizer.initWithImage(processedImageBlob);
+      
+      if (success) {
+        this.uiManager.updateStatus('📏 Ajuste as dimensões e clique em "Aplicar Redimensionamento"', 'info');
+      } else {
+        this.uiManager.updateStatus('❌ Erro ao preparar redimensionamento', 'error');
+        this.uiManager.showPage(3);
+      }
+      
+    } catch (error) {
+      console.error('Erro ao inicializar redimensionamento:', error);
+      this.uiManager.updateStatus('❌ Erro ao preparar ferramenta de redimensionamento', 'error');
+      this.uiManager.showPage(3);
+    }
+  }
+
+  async handleApplyResize() {
+    try {
+      const processedImageBlob = globalState.getProcessedImageBlob();
+      if (!processedImageBlob) {
+        this.uiManager.updateStatus('❌ Imagem não encontrada', 'error');
+        return;
+      }
+
+      this.uiManager.updateStatus('📏 Aplicando redimensionamento...', 'loading');
+      
+      // Redimensionar a imagem
+      const resizedBlob = await this.imageResizer.resizeImage(processedImageBlob);
+      
+      // Salvar imagem redimensionada no estado global
+      globalState.setProcessedImageBlob(resizedBlob);
+      
+      // Mostrar resultado final
+      this.showFinalResult(resizedBlob);
+      
+      this.uiManager.updateStatus('✅ Redimensionamento aplicado com sucesso!', 'success');
+      
+    } catch (error) {
+      console.error('Erro ao aplicar redimensionamento:', error);
+      this.uiManager.updateStatus('❌ Erro ao redimensionar imagem', 'error');
+    }
+  }
+
+  showFinalResult(imageBlob) {
+    const finalResult = document.getElementById('final-result');
+    if (finalResult && imageBlob) {
+      const imageUrl = URL.createObjectURL(imageBlob);
+      
+      // Criar container para resultado final
+      finalResult.innerHTML = `
+        <div class="result-image-container">
+          <img src="${imageUrl}" alt="Imagem final redimensionada" class="result-image" />
+          <div class="result-actions">
+            <button class="download-btn" onclick="downloadFinalImage()">
+              💾 Baixar Imagem Final
+            </button>
+          </div>
+        </div>
+      `;
+      
+      this.uiManager.showPage(4);
     }
   }
 
@@ -385,6 +509,14 @@ class RemoveBGApp {
 
 // Expose global functions for onclick handlers
 window.downloadProcessedImage = function() {
+  if (window.removeBGApp) {
+    window.removeBGApp.downloadProcessedImage();
+  } else {
+    console.error('RemoveBG App not initialized');
+  }
+};
+
+window.downloadFinalImage = function() {
   if (window.removeBGApp) {
     window.removeBGApp.downloadProcessedImage();
   } else {

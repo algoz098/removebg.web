@@ -15,7 +15,7 @@ export class UIManager {
     console.log(`🔄 UIManager.showPage(${pageNumber}) chamado`);
     
     // Lista de todas as páginas possíveis
-    const pageIds = ['page-1', 'page-2', 'page-crop', 'page-3'];
+    const pageIds = ['page-1', 'page-2', 'page-crop', 'page-3', 'page-resize', 'page-4'];
     
     // Esconder todas as páginas
     pageIds.forEach(pageId => {
@@ -30,6 +30,8 @@ export class UIManager {
     let targetPageId;
     if (pageNumber === 'crop' || pageNumber === 2.5) {
       targetPageId = 'page-crop';
+    } else if (pageNumber === 'resize' || pageNumber === 3.5) {
+      targetPageId = 'page-resize';
     } else {
       targetPageId = `page-${pageNumber}`;
     }
@@ -78,13 +80,16 @@ export class UIManager {
       2: 2,
       'crop': 2.5,
       2.5: 2.5,
-      3: 3
+      3: 3,
+      'resize': 3.5,
+      3.5: 3.5,
+      4: 4
     };
     
     const currentStep = pageToStep[currentPage] || currentPage;
     
     // Atualizar todos os steps
-    [1, 2, 2.5, 3].forEach(step => {
+    [1, 2, 2.5, 3, 3.5, 4].forEach(step => {
       const stepElement = document.querySelector(`[data-step="${step}"]`);
       if (stepElement) {
         stepElement.classList.remove('active', 'completed');
