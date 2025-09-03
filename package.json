@@ -11,12 +11,9 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "analyze": "npm run build -- --analyze",
-    "test:e2e": "playwright test --config tests/config/playwright-headless.config.js",
-    "test:e2e:ui": "playwright test --ui --config tests/config/playwright-headless.config.js",
-    "test:e2e:debug": "playwright test --debug --config tests/config/playwright-headless.config.js",
-    "test:e2e:headed": "playwright test --headed --config tests/config/playwright-headed.config.js",
-    "test:e2e:install": "playwright install",
-    "test:install": "npm run test:e2e:install"
+    "test": "playwright test --config tests/config/playwright-headless.config.js",
+    "test:headed": "playwright test --config tests/config/playwright-headed.config.js",
+    "test:ui": "playwright test --ui --config tests/config/playwright-headless.config.js"
   },
   "dependencies": {
     "@imgly/background-removal": "^1.4.5"
