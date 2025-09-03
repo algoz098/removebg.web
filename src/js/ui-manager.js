@@ -22,7 +22,9 @@ export class UIManager {
       const page = document.getElementById(pageId);
       if (page) {
         page.style.display = 'none';
-        console.log(`🫥 Página ${pageId} ocultada`);
+        console.log(`🫥 Página ${pageId} ocultada - display: ${page.style.display}`);
+      } else {
+        console.log(`❌ Página ${pageId} não encontrada`);
       }
     });
 
@@ -40,7 +42,7 @@ export class UIManager {
     const currentPageElement = document.getElementById(targetPageId);
     if (currentPageElement) {
       currentPageElement.style.display = 'block';
-      console.log(`✅ Página ${targetPageId} exibida`);
+      console.log(`✅ Página ${targetPageId} exibida - display: ${currentPageElement.style.display}`);
       
       // Verificar se realmente está visível
       const styles = window.getComputedStyle(currentPageElement);

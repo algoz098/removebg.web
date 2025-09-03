@@ -17,10 +17,8 @@ export class FileUploadManager {
     
     console.log('🔧 Configurando event listeners...');
     
-    // Aguardar um pouco para garantir que o DOM está pronto
-    setTimeout(() => {
-      this.initializeListeners();
-    }, 100);
+    // Configurar listeners imediatamente
+    this.initializeListeners();
   }
 
   initializeListeners() {
@@ -35,8 +33,9 @@ export class FileUploadManager {
     });
     
     if (!fileInput || !uploadArea) {
-      console.error('❌ Elementos essenciais não encontrados! Tentando novamente em 500ms...');
-      setTimeout(() => this.initializeListeners(), 500);
+      console.error('❌ Elementos essenciais não encontrados! Configurando mesmo assim...');
+      // Tentar configurar mesmo sem encontrar os elementos
+      this.setupBasicListeners();
       return;
     }
     
@@ -46,6 +45,9 @@ export class FileUploadManager {
       console.log('📁 Event change disparado!', e.target.files);
       this.handleFileUpload(e);
     });
+    
+    // Marcar que o listener foi configurado (para testes)
+    fileInput._hasChangeListener = true;
     
     // Configurar listeners de drag and drop
     uploadArea.addEventListener('dragover', (e) => {
@@ -97,6 +99,23 @@ export class FileUploadManager {
     
     // Teste adicional para debugging no Chrome
     this.testFileInputFunctionality();
+  }
+
+  setupBasicListeners() {
+    console.log('🔧 Configurando listeners básicos...');
+    
+    // Tentar novamente em 100ms
+    setTimeout(() => {
+      const fileInput = document.getElementById('file-input');
+      const uploadArea = document.getElementById('upload-area');
+      
+      if (fileInput && uploadArea) {
+        console.log('✅ Elementos encontrados no retry, configurando listeners...');
+        this.initializeListeners();
+      } else {
+        console.error('❌ Elementos ainda não encontrados após retry');
+      }
+    }, 100);
   }
 
   triggerFileInput() {
@@ -163,13 +182,19 @@ export class FileUploadManager {
 
   handleFileUpload(event) {
     console.log('🎯 handleFileUpload chamado!', event);
+    console.log('📋 Event target:', event.target);
+    console.log('📋 Event target files:', event.target.files);
+    console.log('📋 Files length:', event.target.files ? event.target.files.length : 'undefined');
+    
     const file = event.target.files[0];
     console.log('📁 Arquivo selecionado:', file);
+    
     if (file) {
       console.log('✅ Arquivo encontrado, processando...');
       this.processFile(file);
     } else {
       console.error('❌ Nenhum arquivo encontrado no event.target.files[0]');
+      console.error('🔍 Files array:', event.target.files);
     }
   }
 
@@ -206,8 +231,10 @@ export class FileUploadManager {
     } catch (error) {
       console.error('💥 ERRO em processFile:', error);
       console.error('📊 Stack trace:', error.stack);
-      console.error(`❌ ${error.message}`);
+      console.error('🔍 Error message:', error.message);
+      console.error('🔍 Error name:', error.name);
       this.uiManager.updateStatus(`❌ ${error.message}`, 'error');
+      throw error; // Re-throw para que o erro seja propagado
     }
   }
 

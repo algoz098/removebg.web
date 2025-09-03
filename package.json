@@ -11,10 +11,10 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "analyze": "npm run build -- --analyze",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:e2e:debug": "playwright test --debug",
-    "test:e2e:headed": "playwright test --headed",
+    "test:e2e": "playwright test --config tests/config/playwright-headless.config.js",
+    "test:e2e:ui": "playwright test --ui --config tests/config/playwright-headless.config.js",
+    "test:e2e:debug": "playwright test --debug --config tests/config/playwright-headless.config.js",
+    "test:e2e:headed": "playwright test --headed --config tests/config/playwright-headed.config.js",
     "test:e2e:install": "playwright install",
     "test:install": "npm run test:e2e:install"
   },
@@ -22,11 +22,16 @@
     "@imgly/background-removal": "^1.4.5"
   },
   "devDependencies": {
-    "@playwright/test": "^1.44.0",
+    "@playwright/test": "^1.55.0",
     "terser": "^5.44.0",
     "vite": "^4.0.0"
   },
-  "keywords": ["remove-background", "image-processing", "pwa", "ai"],
+  "keywords": [
+    "remove-background",
+    "image-processing",
+    "pwa",
+    "ai"
+  ],
   "author": "",
   "license": "MIT"
 }
