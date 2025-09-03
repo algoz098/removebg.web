@@ -1,0 +1,21 @@
+{
+  "name": "removebg-webapp",
+  "version": "1.0.0",
+  "description": "Webapp para remoção automática de fundo de imagens totalmente no navegador usando @imgly/background-removal.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:pwa": "npm run build && cp public/manifest.json src/js/sw.js src/js/pwa.js dist/ && cp -r public/icons dist/ && cp -r public/screenshots dist/",
+    "build:netlify": "npm run build:pwa && mkdir -p netlify-deploy-$(date +%Y%m%d-%H%M%S) && cp -r dist/* netlify-deploy-$(date +%Y%m%d-%H%M%S)/ && echo 'Netlify deploy folder created: netlify-deploy-'$(date +%Y%m%d-%H%M%S)",
+    "deploy:prepare": "npm run build:netlify",
+    "preview": "vite preview",
+    "generate-icons": "node scripts/generate-icons.js"
+  },
+  "dependencies": {
+    "@imgly/background-removal": "^1.4.5"
+  },
+  "devDependencies": {
+    "terser": "^5.44.0",
+    "vite": "^4.0.0"
+  }
+}
