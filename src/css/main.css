@@ -8,6 +8,9 @@
 @import './result.css';
 @import './layout.css';
 @import './cropper.css';
+@import './toast.css';
+@import './states.css';
+@import './help.css';
 
 /* Header de Navegação - Estilos básicos para a página principal */
 .nav-header {
@@ -41,12 +44,40 @@
   gap: 2rem;
 }
 
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 4px;
+}
+
+.nav-hamburger span {
+  width: 25px;
+  height: 3px;
+  background: white;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.nav-hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.nav-hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
 .nav-link {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .nav-link:hover,
@@ -55,15 +86,54 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+.nav-link:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
 /* Responsividade para o header */
 @media (max-width: 768px) {
   .nav-container {
     padding: 1rem;
-    flex-direction: column;
-    gap: 1rem;
+    position: relative;
   }
   
   .nav-menu {
-    gap: 1rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    gap: 0;
+    padding: 1rem 0;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+  }
+  
+  .nav-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .nav-link {
+    padding: 1rem;
+    border-radius: 0;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .nav-link:last-child {
+    border-bottom: none;
+  }
+  
+  .nav-hamburger {
+    display: flex;
   }
 }

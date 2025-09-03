@@ -1,6 +1,6 @@
 /* Botões */
 .btn-primary, .btn-secondary {
-  padding: 12px 24px;
+  padding: 14px 24px;
   border: none;
   border-radius: 8px;
   font-size: 16px;
@@ -11,6 +11,8 @@
   display: inline-block;
   margin: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: 44px;
+  min-width: 44px;
 }
 
 .btn-primary {
@@ -23,6 +25,11 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
+.btn-primary:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
 .btn-secondary {
   background: rgba(255, 255, 255, 0.9);
   color: #333;
@@ -33,6 +40,25 @@
   background: white;
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary:focus {
+  outline: 2px solid rgba(102, 126, 234, 0.8);
+  outline-offset: 2px;
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-primary:disabled:hover,
+.btn-secondary:disabled:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 .page-actions {

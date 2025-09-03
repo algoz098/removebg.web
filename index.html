@@ -30,18 +30,18 @@
 <body>
   <!-- Splash Screen será inserida aqui pelo JavaScript -->
   <!-- Header de Navegação -->
-  <header class="nav-header">
+  <header class="nav-header" role="banner">
     <div class="nav-container">
-      <a href="/" class="nav-logo">🎨 RemoveBG</a>
-      <nav class="nav-menu">
-        <a href="/" class="nav-link active">Início</a>
-        <a href="/sobre.html" class="nav-link">Sobre</a>
+      <a href="/" class="nav-logo" aria-label="RemoveBG Home">🎨 RemoveBG</a>
+      <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-link active" aria-label="Go to home page">Início</a>
+        <a href="/sobre.html" class="nav-link" aria-label="Go to about page">Sobre</a>
       </nav>
     </div>
   </header>
 
   <!-- Conteúdo Principal -->
-  <main class="main-content" style="display: none;">
+  <main class="main-content" role="main" style="display: none;">
     <div class="container">
       <!-- Indicador de progresso das páginas -->
       <div class="page-indicator">
@@ -59,7 +59,7 @@
       <!-- Input file escondido, fora da upload-area -->
       <input type="file" id="file-input" accept="image/*" style="display: none;" />
       
-      <div class="upload-area" id="upload-area">
+      <div class="upload-area" id="upload-area" tabindex="0" role="button" aria-label="Click to select an image or drag and drop here. Supports JPG, PNG, WEBP up to 10MB">
         <div class="upload-text">
           <span class="upload-icon">📸</span>
           <span>Clique para selecionar uma imagem ou arraste aqui</span>
@@ -78,9 +78,9 @@
         </div>
       </div>
       <div class="page-actions">
-        <button class="btn-secondary" id="back-to-upload">⬅️ Voltar</button>
-        <button class="btn-secondary" id="crop-image">✂️ Cortar Imagem</button>
-        <button class="btn-primary" id="proceed-to-process">Processar ➡️</button>
+        <button class="btn-secondary" id="back-to-upload" aria-label="Go back to upload page">⬅️ Voltar</button>
+        <button class="btn-secondary" id="crop-image" aria-label="Crop the image">✂️ Cortar Imagem</button>
+        <button class="btn-primary" id="proceed-to-process" aria-label="Proceed to process the image">Processar ➡️</button>
       </div>
     </div>
     
@@ -122,10 +122,10 @@
       <!-- Seção de processamento -->
       <div id="processing-section">
         <div class="progress-container">
-          <div class="progress-bar">
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <div class="progress-fill" id="progress-fill"></div>
           </div>
-          <div id="progress-text">Carregando...</div>
+          <div id="progress-text" aria-live="polite">Carregando...</div>
         </div>
       </div>
       
@@ -133,8 +133,8 @@
       <div id="result-section" style="display:none;">
         <div id="result" class="result"></div>
         <div class="page-actions">
-          <button class="btn-secondary" id="process-new">🆕 Nova Imagem</button>
-          <button class="btn-secondary" id="back-to-preview-from-result">⬅️ Voltar</button>
+          <button class="btn-secondary" id="process-new" aria-label="Process a new image">🆕 Nova Imagem</button>
+          <button class="btn-secondary" id="back-to-preview-from-result" aria-label="Go back to preview">⬅️ Voltar</button>
         </div>
         </div>
       </div>

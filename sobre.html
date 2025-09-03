@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
+  <meta         <section class="sobre-section" aria-labelledby="browser-title">
+          <div class="section-icon">🌐</div>
+          <h2 id="browser-title">100% no Navegador</h2>rset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sobre - RemoveBG</title>
   
@@ -29,18 +31,18 @@
 </head>
 <body>
   <!-- Header de Navegação -->
-  <header class="nav-header">
+  <header class="nav-header" role="banner">
     <div class="nav-container">
-      <a href="/" class="nav-logo">🎨 RemoveBG</a>
-      <nav class="nav-menu">
-        <a href="/" class="nav-link">Início</a>
-        <a href="/sobre.html" class="nav-link active">Sobre</a>
+      <a href="/" class="nav-logo" aria-label="RemoveBG Home">🎨 RemoveBG</a>
+      <nav class="nav-menu" role="navigation" aria-label="Main navigation">
+        <a href="/" class="nav-link" aria-label="Go to home page">Início</a>
+        <a href="/sobre.html" class="nav-link active" aria-label="Go to about page">Sobre</a>
       </nav>
     </div>
   </header>
 
   <!-- Conteúdo Principal -->
-  <main class="main-content">
+  <main class="main-content" role="main">
     <div class="container">
       <div class="sobre-header">
         <h1>🚀 Sobre o RemoveBG !</h1>
@@ -56,9 +58,9 @@
         </section>
 
         <!-- Desenvolvido com IA -->
-        <section class="sobre-section">
+        <section class="sobre-section" aria-labelledby="ai-title">
           <div class="section-icon">🤖</div>
-          <h2>Criado 100% com IA</h2>
+          <h2 id="ai-title">Criado 100% com IA</h2>
           <p>Este projeto completo foi desenvolvido inteiramente usando <strong>GitHub Copilot</strong> - código, design, funcionalidades e até mesmo esta página foram gerados por inteligência artificial.</p>
           <div class="ai-badge">
             <span class="ai-icon">🚀</span>
@@ -67,17 +69,17 @@
         </section>
 
         <!-- Call to Action -->
-        <section class="cta-section">
-          <h2>Experimente agora!</h2>
+        <section class="cta-section" aria-labelledby="cta-title">
+          <h2 id="cta-title">Experimente agora!</h2>
           <p>Remova fundos de imagens instantaneamente</p>
-          <a href="/" class="btn-primary cta-button">🎨 Começar</a>
+          <a href="/" class="btn-primary cta-button" aria-label="Start using RemoveBG">🎨 Começar</a>
         </section>
       </div>
     </div>
   </main>
 
   <!-- Footer -->
-  <footer class="footer">
+  <footer class="footer" role="contentinfo">
     <div class="container">
       <p>&copy; 2025 RemoveBG. Feito com ❤️ para facilitar sua vida.</p>
       <div class="footer-links">

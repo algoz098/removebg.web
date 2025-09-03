@@ -1,18 +1,21 @@
 /* Páginas */
 .app-page {
-  display: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .app-page.active {
-  display: block;
+  opacity: 1;
+  visibility: visible;
 }
 
 .page {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 30px;
-  margin: 20px 0;
+  padding: var(--spacing-md);
+  margin: var(--spacing-xs) 0;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -40,9 +43,9 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .container {
-    padding: 15px;
+    padding: var(--spacing-md);
   }
   
   h1 {
@@ -53,13 +56,18 @@
     font-size: 1.5rem;
   }
   
+  .page {
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md) 0;
+  }
+  
   .result-comparison {
     grid-template-columns: 1fr;
-    gap: 15px;
+    gap: var(--spacing-md);
   }
   
   .upload-area {
-    padding: 40px 15px;
+    padding: var(--spacing-xl) var(--spacing-md);
   }
   
   .upload-text {
@@ -87,6 +95,72 @@
   .image-info {
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: var(--spacing-sm);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-lg);
+  }
+  
+  h1 {
+    font-size: 2.2rem;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+  }
+  
+  .page {
+    padding: var(--spacing-md);
+  }
+  
+  .result-comparison {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .upload-area {
+    padding: var(--spacing-xxl) var(--spacing-lg);
+  }
+  
+  .upload-text {
+    font-size: 18px;
+  }
+  
+  .upload-icon {
+    font-size: 40px;
+  }
+  
+  .page-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    max-width: 250px;
+  }
+  
+  .step-line {
+    width: 40px;
+  }
+  
+  .image-info {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1400px;
+  }
+  
+  .page {
+    padding: var(--spacing-sm);
+    margin: var(--spacing-xs) 0;
   }
 }
