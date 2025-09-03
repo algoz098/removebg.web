@@ -155,6 +155,12 @@ class GlobalStateManager {
     this.saveState();
   }
 
+  setSplashCompleted(completed = true) {
+    this.state.session.splashCompleted = completed;
+    this.state.session.splashTimestamp = Date.now();
+    this.saveState();
+  }
+
   isSplashCompleted() {
     return this.state.session.splashCompleted === true;
   }

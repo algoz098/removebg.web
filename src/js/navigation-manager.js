@@ -43,7 +43,7 @@ class NavigationManager {
     }
 
     // Atualizar estado global com página atual
-    globalState.updateCurrentPage(currentPath);
+    globalState.updateNavigation(currentPath);
   }
 
   /**

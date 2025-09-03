@@ -1,5 +1,6 @@
 // Gerenciamento da interface do usuário
 import { formatFileSize } from './utils.js';
+import { modelPreloader } from './model-preloader.js';
 
 export class UIManager {
   constructor() {
@@ -57,7 +58,7 @@ export class UIManager {
     // Se chegou na página 2 (preview), tentar pré-carregar modelo se ainda não foi feito
     if (pageNumber === 2 && !modelPreloader.isReady() && !modelPreloader.isPreloading) {
       setTimeout(() => {
-        toast.info('🧠 Preparando modelo de IA para processamento mais rápido...', 3000);
+        console.log('🧠 Preparando modelo de IA para processamento mais rápido...');
         modelPreloader.startPreloading();
       }, 1000);
     }
@@ -130,13 +131,13 @@ export class UIManager {
     this.statusElement.textContent = message;
     this.statusElement.className = `show ${type}`;
 
-    // Também mostrar como toast para melhor visibilidade
+    // Log para debugging
     if (type === 'error') {
-      toast.error(message);
+      console.error('❌', message);
     } else if (type === 'success') {
-      toast.success(message);
+      console.log('✅', message);
     } else {
-      toast.info(message);
+      console.log('ℹ️', message);
     }
 
     setTimeout(() => {
