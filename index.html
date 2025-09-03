@@ -51,6 +51,8 @@
         <div class="step-line"></div>
         <div class="step" data-step="2">2</div>
         <div class="step-line"></div>
+        <div class="step" data-step="2.5">✂️</div>
+        <div class="step-line"></div>
         <div class="step" data-step="3">3</div>
       </div>
     
@@ -76,6 +78,9 @@
         <button id="fallback-upload-btn" style="background: #6c5ce7; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-size: 14px;">
           🔧 Botão Alternativo (Teste)
         </button>
+        <button id="debug-crop-btn" style="background: #17a2b8; color: white; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-size: 14px; margin-left: 10px;">
+          ✂️ Testar Crop
+        </button>
       </div>
     </div>
     
@@ -91,7 +96,31 @@
       </div>
       <div class="page-actions">
         <button class="btn-secondary" id="back-to-upload">⬅️ Voltar</button>
+        <button class="btn-secondary" id="crop-image">✂️ Cortar Imagem</button>
         <button class="btn-primary" id="proceed-to-process">Processar ➡️</button>
+      </div>
+    </div>
+    
+    <!-- Página 2.5: Corte de Imagem -->
+    <div class="page" id="page-crop" style="display:none;">
+      <h2>✂️ Cortar Imagem</h2>
+      <div class="crop-help">
+        <span class="crop-help-item">🖱️ Arraste os cantos e bordas para redimensionar</span>
+        <span class="crop-help-item">↔️ Clique e arraste o centro para mover</span>
+        <span class="crop-help-item">📐 A área selecionada (sem overlay escuro) será mantida</span>
+        <span class="crop-help-item">💡 Use "🔄 Resetar" para área de 80% ou "📐 Imagem Completa" para 100%</span>
+      </div>
+      <div class="crop-container">
+        <div class="crop-info">
+          <div>Área selecionada: <span class="crop-dimensions" id="crop-dimensions">-</span></div>
+        </div>
+        <div id="crop-preview"></div>
+      </div>
+      <div class="page-actions crop-controls">
+        <button class="btn-secondary" id="reset-crop">🔄 Resetar</button>
+        <button class="btn-secondary" id="full-crop">📐 Imagem Completa</button>
+        <button class="btn-secondary" id="back-to-preview">⬅️ Voltar</button>
+        <button class="btn-primary" id="apply-crop">✅ Aplicar Corte</button>
       </div>
     </div>
     
@@ -126,6 +155,6 @@
   <script type="module" src="/src/js/splash-manager.js"></script>
   <script type="module" src="/src/js/pwa-advanced.js"></script>
   <script type="module" src="/src/js/navigation-manager.js"></script>
-  <script type="module" src="/src/js/main.prod.js"></script>
+  <script type="module" src="/src/js/main.js"></script>
 </body>
 </html>

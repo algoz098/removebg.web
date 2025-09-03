@@ -13,7 +13,7 @@ export class BackgroundProcessor {
   /**
    * Remove o fundo da imagem
    */
-  async processImage(file) {
+  async processImage(file, displayName = null) {
     try {
       this.uiManager.updateProgress(0, 'Iniciando processamento...');
       
@@ -67,8 +67,8 @@ export class BackgroundProcessor {
       // Armazenar resultado no estado global
       globalState.setProcessedImageBlob(imageBlob);
       
-      // Mostrar resultado
-      await this.showResult(file, imageBlob);
+      // Mostrar resultado - usar displayName se fornecido
+      await this.showResult(file, imageBlob, displayName);
       
       return imageBlob;
       
@@ -96,7 +96,7 @@ export class BackgroundProcessor {
   /**
    * Exibe o resultado da remoção de fundo
    */
-  async showResult(originalFile, processedBlob) {
+  async showResult(processedFile, processedBlob, displayName = null) {
     const result = document.getElementById('result');
     if (!result) return;
 
@@ -107,12 +107,15 @@ export class BackgroundProcessor {
     const comparison = document.createElement('div');
     comparison.className = 'result-comparison';
 
-    // Imagem original
+    // Determinar o nome para exibir
+    const beforeLabel = displayName || '📸 Original';
+
+    // Imagem original (ou cortada)
     const originalSection = document.createElement('div');
     originalSection.className = 'result-item';
     originalSection.innerHTML = `
-      <h4>📸 Original</h4>
-      <img src="${URL.createObjectURL(originalFile)}" alt="Imagem Original" />
+      <h4>${beforeLabel}</h4>
+      <img src="${URL.createObjectURL(processedFile)}" alt="Imagem Original" />
     `;
 
     // Imagem processada
@@ -133,7 +136,7 @@ export class BackgroundProcessor {
     const downloadButton = document.createElement('button');
     downloadButton.className = 'download-btn';
     downloadButton.innerHTML = '💾 Baixar Imagem';
-    downloadButton.onclick = () => this.downloadImage(processedBlob, originalFile.name);
+    downloadButton.onclick = () => this.downloadImage(processedBlob, processedFile.name);
 
     downloadSection.appendChild(downloadButton);
 

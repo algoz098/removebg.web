@@ -7,6 +7,7 @@
 @import './progress.css';
 @import './result.css';
 @import './layout.css';
+@import './cropper.css';
 
 /* Header de Navegação - Estilos básicos para a página principal */
 .nav-header {

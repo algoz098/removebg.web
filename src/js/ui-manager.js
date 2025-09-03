@@ -14,39 +14,41 @@ export class UIManager {
   showPage(pageNumber) {
     console.log(`🔄 UIManager.showPage(${pageNumber}) chamado`);
     
-    // Verificar se todas as páginas existem
-    const pages = {};
-    for (let i = 1; i <= 3; i++) {
-      pages[i] = document.getElementById(`page-${i}`);
-      console.log(`📄 Página ${i}:`, !!pages[i]);
-    }
+    // Lista de todas as páginas possíveis
+    const pageIds = ['page-1', 'page-2', 'page-crop', 'page-3'];
     
     // Esconder todas as páginas
-    for (let i = 1; i <= 3; i++) {
-      const page = pages[i];
+    pageIds.forEach(pageId => {
+      const page = document.getElementById(pageId);
       if (page) {
         page.style.display = 'none';
-        console.log(`�️ Página ${i} ocultada (display: none)`);
-      } else {
-        console.error(`❌ Página ${i} não encontrada no DOM!`);
+        console.log(`🫥 Página ${pageId} ocultada`);
       }
+    });
+
+    // Determinar qual página mostrar
+    let targetPageId;
+    if (pageNumber === 'crop' || pageNumber === 2.5) {
+      targetPageId = 'page-crop';
+    } else {
+      targetPageId = `page-${pageNumber}`;
     }
 
     // Mostrar página atual
-    const currentPageElement = pages[pageNumber];
+    const currentPageElement = document.getElementById(targetPageId);
     if (currentPageElement) {
       currentPageElement.style.display = 'block';
-      console.log(`✅ Página ${pageNumber} exibida (display: block)`);
+      console.log(`✅ Página ${targetPageId} exibida`);
       
       // Verificar se realmente está visível
       const styles = window.getComputedStyle(currentPageElement);
-      console.log(`📊 Estilos da página ${pageNumber}:`, {
+      console.log(`📊 Estilos da página ${targetPageId}:`, {
         display: styles.display,
         visibility: styles.visibility,
         opacity: styles.opacity
       });
     } else {
-      console.error(`❌ Elemento page-${pageNumber} não encontrado!`);
+      console.error(`❌ Elemento ${targetPageId} não encontrado!`);
       return;
     }
 
@@ -70,24 +72,36 @@ export class UIManager {
    * Atualiza o indicador de progresso das páginas
    */
   updatePageIndicator(currentPage) {
-    for (let i = 1; i <= 3; i++) {
-      const step = document.querySelector(`[data-step="${i}"]`);
-      const line = step?.nextElementSibling;
-      
-      if (step) {
-        step.classList.remove('active', 'completed');
+    // Mapear páginas para steps
+    const pageToStep = {
+      1: 1,
+      2: 2,
+      'crop': 2.5,
+      2.5: 2.5,
+      3: 3
+    };
+    
+    const currentStep = pageToStep[currentPage] || currentPage;
+    
+    // Atualizar todos os steps
+    [1, 2, 2.5, 3].forEach(step => {
+      const stepElement = document.querySelector(`[data-step="${step}"]`);
+      if (stepElement) {
+        stepElement.classList.remove('active', 'completed');
         
-        if (i < currentPage) {
-          step.classList.add('completed');
-        } else if (i === currentPage) {
-          step.classList.add('active');
+        if (step < currentStep) {
+          stepElement.classList.add('completed');
+        } else if (step === currentStep) {
+          stepElement.classList.add('active');
         }
       }
-      
-      if (line && line.classList.contains('step-line')) {
-        line.classList.toggle('completed', i < currentPage);
-      }
-    }
+    });
+    
+    // Atualizar linhas de progresso
+    document.querySelectorAll('.step-line').forEach((line, index) => {
+      const stepNumber = index === 0 ? 1 : (index === 1 ? 2 : 2.5);
+      line.classList.toggle('completed', stepNumber < currentStep);
+    });
   }
 
   /**
@@ -166,5 +180,29 @@ export class UIManager {
     if (result) {
       result.innerHTML = '';
     }
+  }
+
+  /**
+   * Atualiza as dimensões do crop na interface
+   */
+  updateCropDimensions(width, height) {
+    const dimensionsElement = document.getElementById('crop-dimensions');
+    if (dimensionsElement) {
+      dimensionsElement.textContent = `${Math.round(width)} × ${Math.round(height)}px`;
+    }
+  }
+
+  /**
+   * Mostra a página de cropping
+   */
+  showCropPage() {
+    this.showPage('crop');
+  }
+
+  /**
+   * Volta da página de cropping para preview
+   */
+  backToPreview() {
+    this.showPage(2);
   }
 }
