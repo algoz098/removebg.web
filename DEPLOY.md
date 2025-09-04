@@ -58,19 +58,13 @@ O deploy acontece automaticamente quando:
 
 ### Processo de deploy
 
-1. **Teste**: Executa todos os testes Playwright
-2. **Build**: Compila o projeto com Vite
-3. **Deploy**: Publica no Netlify
-4. **Notificação**: Comenta no commit/PR com o link
+1. **Build**: Compila o projeto com Vite
+2. **Deploy**: Publica no Netlify
+3. **Notificação**: Comenta no commit/PR com o link
 
 ### Comandos executados
 
 ```bash
-# Testes
-npm ci
-npx playwright install --with-deps
-npm run test
-
 # Build e Deploy
 npm ci
 npm run build:prod  # Inclui build PWA
@@ -104,19 +98,13 @@ package.json           # Scripts de build
 2. Confirme o Site ID no Netlify
 3. Verifique se o token tem permissões suficientes
 
-### Testes falham
-
-1. Execute localmente: `npm run test`
-2. Verifique se a imagem de teste existe: `public/screenshots/test.jpeg`
-3. Analise os artifacts de teste no GitHub Actions
-
 ## 📈 Monitoramento
 
 ### GitHub Actions
 
 - Vá para a aba **Actions** do repositório
 - Veja o status dos workflows
-- Download dos artifacts de teste (se houver falhas)
+- Verifique os logs de build e deploy
 
 ### Netlify
 
@@ -159,5 +147,4 @@ Edite `netlify.toml` para:
 
 1. **Primeiro deploy**: Pode demorar mais (instalação de dependências)
 2. **Cache**: Deploys subsequentes são mais rápidos (cache do npm)
-3. **Testes**: Deploy só acontece se os testes passarem
-4. **Domínio custom**: Configure no Netlify Dashboard após o primeiro deploy
+3. **Domínio custom**: Configure no Netlify Dashboard após o primeiro deploy

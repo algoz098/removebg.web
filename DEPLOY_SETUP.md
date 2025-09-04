@@ -40,7 +40,7 @@ npm run deploy:preview
 
 - ✅ Build configurado e testado
 - ✅ PWA manifests incluídos  
-- ✅ Testes integrados no CI/CD
+- ✅ Auto-deploy configurado (sem testes automáticos)
 - ✅ Cache e headers otimizados
 - ✅ Redirects configurados para SPA
 - ✅ Scripts de deploy manual
