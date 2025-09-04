@@ -13,13 +13,17 @@
     "analyze": "npm run build -- --analyze",
     "test": "playwright test --config tests/config/playwright-headless.config.js",
     "test:headed": "playwright test --config tests/config/playwright-headed.config.js",
-    "test:ui": "playwright test --ui --config tests/config/playwright-headless.config.js"
+    "test:ui": "playwright test --ui --config tests/config/playwright-headless.config.js",
+    "deploy:test": "npm run test && npm run build:prod",
+    "deploy:preview": "npm run deploy:test && npx netlify deploy --dir=dist",
+    "deploy:prod": "npm run deploy:test && npx netlify deploy --prod --dir=dist"
   },
   "dependencies": {
     "@imgly/background-removal": "^1.4.5"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
+    "netlify-cli": "^17.0.0",
     "terser": "^5.44.0",
     "vite": "^4.0.0"
   },

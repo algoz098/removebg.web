@@ -92,6 +92,31 @@
   outline-offset: 2px;
 }
 
+/* Link específico do GitHub */
+.nav-github {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-github:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.github-icon {
+  font-size: 1.2em;
+  filter: grayscale(0.2);
+}
+
+.github-text {
+  font-weight: 500;
+  font-size: 0.9em;
+}
+
 /* Responsividade para o header */
 @media (max-width: 768px) {
   .nav-container {

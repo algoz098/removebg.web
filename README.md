@@ -1,6 +1,11 @@
 # RemoveBG WebApp
+This app was generated though IA to solve a problem I had.
 
-Webapp para remoção automática de fundo de imagens totalmente no navegador usando @imgly/background-removal.
+PRs are welcome.
+
+Webapp to remove BG from images using: @imgly/background-removal.
+
+Where I can use it?: https://removebg.arcode.online/
 
 ## Scripts Disponíveis
 
